@@ -70,12 +70,7 @@
         .correct-opt { background-color: var(--correct) !important; color: white !important; }
         .wrong-opt { background-color: var(--wrong) !important; color: white !important; }
         
-        /* NAVIGATION BUTTONS CONTAINER */
-        .nav-controls {
-            display: flex;
-            gap: 15px;
-            margin-top: 25px;
-        }
+        .nav-controls { display: flex; gap: 15px; margin-top: 25px; }
 
         .nav-btn {
             flex: 1;
@@ -90,22 +85,20 @@
             transition: 0.3s;
         }
 
-        .nav-btn:disabled {
-            background: var(--unsolved);
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
+        .nav-btn:disabled { background: var(--unsolved); cursor: not-allowed; opacity: 0.5; }
 
         .theme-toggle { position: fixed; bottom: 60px; right: 20px; padding: 10px; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; border: none; background: var(--primary); color: white; font-size: 1.5rem; }
 
         footer {
             margin-top: auto;
             padding: 20px;
-            font-size: 0.75rem; /* Smaller size */
-            color: #d63031; /* Red color */
+            font-size: 0.75rem;
+            color: #d63031;
             font-weight: 500;
             text-align: center;
         }
+        
+        .reset-link { color: var(--text); opacity: 0.5; text-decoration: underline; cursor: pointer; font-size: 0.7rem; margin-top: 10px; }
     </style>
 </head>
 <body data-theme="light">
@@ -120,6 +113,7 @@
         <button id="prev-btn" class="nav-btn" onclick="prevQuestion()">← Previous</button>
         <button id="next-btn" class="nav-btn" onclick="nextQuestion()">Next →</button>
     </div>
+    <center><div class="reset-link" onclick="resetQuiz()">Reset All Progress</div></center>
 </div>
 
 <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
@@ -130,6 +124,7 @@
 
 <script>
     const examData = [
+        // ... include all 110 questions here ...
         { q: "1. In anaerobic glycolysis, which of the following do you expect to increase in concentration after addition of fluoride?", o: ["Glucose", "2-phosphoglycerate", "Phosphoenol pyruvate", "Pyruvate"], a: 1 },
         { q: "2. What is the most common plasma protein?", o: ["Albumin", "Fibrinogen", "Globulin", "Prothrombin"], a: 0 },
         { q: "3. What is the whole content of iron in body?", o: ["3G", "4G", "5g", "400-500 mg"], a: 2 },
@@ -246,8 +241,9 @@
         { q: "110. Final product of HMS?", o: ["NAD", "NADP", "NADPH+H", "NADH"], a: 2 }
     ];
 
-    let currentIdx = 0;
-    let userAnswers = new Array(examData.length).fill(null);
+    // Load saved data or start fresh
+    let currentIdx = parseInt(localStorage.getItem('quizCurrentIdx')) || 0;
+    let userAnswers = JSON.parse(localStorage.getItem('quizUserAnswers')) || new Array(examData.length).fill(null);
 
     function initTopBar() {
         const bar = document.getElementById('top-bar');
@@ -264,7 +260,10 @@
     }
 
     function updateUI() {
-        // Update top bar circles
+        // Save to local storage
+        localStorage.setItem('quizCurrentIdx', currentIdx);
+        localStorage.setItem('quizUserAnswers', JSON.stringify(userAnswers));
+
         examData.forEach((_, i) => {
             const div = document.getElementById(`nav-${i}`);
             div.classList.remove('active', 'correct', 'wrong');
@@ -273,11 +272,9 @@
             if (userAnswers[i] === 'wrong') div.classList.add('wrong');
         });
 
-        // Scroll top bar to current question
         const activeCircle = document.getElementById(`nav-${currentIdx}`);
-        activeCircle.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        if(activeCircle) activeCircle.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
 
-        // Update Button States
         document.getElementById('prev-btn').disabled = (currentIdx === 0);
         document.getElementById('next-btn').disabled = (currentIdx === examData.length - 1);
         
@@ -295,9 +292,11 @@
             btn.className = 'opt';
             btn.innerText = opt;
             
-            // If already answered, show the result
             if (userAnswers[currentIdx] !== null) {
                 if (i === q.a) btn.classList.add('correct-opt');
+                // If this was the wrong answer user picked
+                // We don't store the exact pick, just the result, 
+                // but we can show the correct one.
                 btn.disabled = true;
             }
             
@@ -307,6 +306,8 @@
     }
 
     function selectOption(index, btn) {
+        if (userAnswers[currentIdx] !== null) return;
+
         const q = examData[currentIdx];
         const allBtns = document.querySelectorAll('.opt');
 
@@ -323,23 +324,15 @@
         updateUI();
     }
 
-    function nextQuestion() {
-        if (currentIdx < examData.length - 1) {
-            currentIdx++;
-            updateUI();
+    function nextQuestion() { if (currentIdx < examData.length - 1) { currentIdx++; updateUI(); } }
+    function prevQuestion() { if (currentIdx > 0) { currentIdx--; updateUI(); } }
+    function jumpTo(index) { currentIdx = index; updateUI(); }
+    
+    function resetQuiz() {
+        if(confirm("Are you sure you want to clear all your answers?")) {
+            localStorage.clear();
+            location.reload();
         }
-    }
-
-    function prevQuestion() {
-        if (currentIdx > 0) {
-            currentIdx--;
-            updateUI();
-        }
-    }
-
-    function jumpTo(index) {
-        currentIdx = index;
-        updateUI();
     }
 
     function toggleTheme() {
