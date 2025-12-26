@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood & Metabolism - Master Quiz</title>
+    <style>
+        :root {
+            --bg: #f5f7fa;
+            --card: #ffffff;
+            --text: #2d3436;
+            --primary: #0984e3;
+            --correct: #27ae60;
+            --wrong: #d63031;
+            --border: #dfe6e9;
+            --unsolved: #b2bec3;
+        }
+
+        [data-theme='dark'] {
+            --bg: #1e272e;
+            --card: #2f3640;
+            --text: #f5f6fa;
+            --primary: #3498db;
+            --border: #485460;
+            --unsolved: #636e72;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding-top: 80px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        
+        .top-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            background: var(--card);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            overflow-x: auto;
+            gap: 8px;
+        }
+
+        .q-circle {
+            min-width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--unsolved);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .q-circle.active { border: 2px solid var(--primary); transform: scale(1.1); font-weight: bold; }
+        .q-circle.correct { background-color: var(--correct); }
+        .q-circle.wrong { background-color: var(--wrong); }
+
+        .quiz-card { background: var(--card); width: 90%; max-width: 650px; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .question { font-size: 1.1rem; font-weight: bold; margin-bottom: 25px; line-height: 1.5; }
+        
+        .options { display: flex; flex-direction: column; gap: 12px; }
+        button.opt { padding: 15px; border: 2px solid var(--border); border-radius: 10px; background: var(--card); color: var(--text); cursor: pointer; text-align: left; font-size: 1rem; transition: 0.2s; }
+        button.opt:hover:not([disabled]) { border-color: var(--primary); }
+
+        .correct-opt { background-color: var(--correct) !important; color: white !important; }
+        .wrong-opt { background-color: var(--wrong) !important; color: white !important; }
+        
+        /* NAVIGATION BUTTONS CONTAINER */
+        .nav-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .nav-btn:disabled {
+            background: var(--unsolved);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .theme-toggle { position: fixed; bottom: 60px; right: 20px; padding: 10px; border-radius: 50%; width: 50px; height: 50px; cursor: pointer; border: none; background: var(--primary); color: white; font-size: 1.5rem; }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 0.75rem; /* Smaller size */
+            color: #d63031; /* Red color */
+            font-weight: 500;
+            text-align: center;
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+<div class="top-bar" id="top-bar"></div>
+
+<div class="quiz-card">
+    <div id="q-text" class="question">Loading...</div>
+    <div id="options-container" class="options"></div>
+    
+    <div class="nav-controls">
+        <button id="prev-btn" class="nav-btn" onclick="prevQuestion()">← Previous</button>
+        <button id="next-btn" class="nav-btn" onclick="nextQuestion()">Next →</button>
+    </div>
+</div>
+
+<button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+<footer>
+    Directed by Dr/Mahmoud
+</footer>
+
+<script>
+    const examData = [
+        { q: "1. In anaerobic glycolysis, which of the following do you expect to increase in concentration after addition of fluoride?", o: ["Glucose", "2-phosphoglycerate", "Phosphoenol pyruvate", "Pyruvate"], a: 1 },
+        { q: "2. What is the most common plasma protein?", o: ["Albumin", "Fibrinogen", "Globulin", "Prothrombin"], a: 0 },
+        { q: "3. What is the whole content of iron in body?", o: ["3G", "4G", "5g", "400-500 mg"], a: 2 },
+        { q: "4. What are the most amino acids exist in globin fraction of hemoglobin?", o: ["Hydroxy proline and lysine", "Lysine and arginine", "Histidine and lysine", "Histidine and arginine"], a: 2 },
+        { q: "5. What is the mutation that caused sickle cell anemia (HbS)?", o: ["Glycine in the 6th position of B chain is replaced by serine", "Glycine in the 6th position of B chain is replaced by valine", "Glutamic acid in the 6th position of B chain is replaced by valine", "Glutamic acid in the 6th position is replaced by serine"], a: 2 },
+        { q: "6. Which of the following is antigen presenting cell?", o: ["T-lymphocytes", "B-lymphocytes"], a: 1 },
+        { q: "7. 5-month old boy with cyanosis, brownish spots in blood, improved with reducing agents. Diagnosis?", o: ["Congenital Met hemoglobinemia (mutation)", "Sickle cell anemia", "Congenital Met hemoglobinemia (reductase deficiency)", "Congenital porphyria"], a: 2 },
+        { q: "8. What is the rate limiting enzyme in Glycogen degradation?", o: ["AlA synthase", "Glycogen synthase", "Glucose 6 phosphatase", "Glycogen phosphorylase"], a: 3 },
+        { q: "9. What is the importance of Vit B12?", o: ["Coagulation factor synthesis", "Methylation of homocysteine to methionine", "Platelets aggregation"], a: 1 },
+        { q: "10. 28-year old vegetarian with megaloblastic anemia and loss of sensation. Cause?", o: ["Folic acid deficiency", "Vit B 12 deficiency", "Iron deficiency", "Chronic blood loss"], a: 1 },
+        { q: "11. What is the role of vitamin K?", o: ["Synthesis of some coagulation factors", "Iron transport", "Oxygen transport", "WBC production"], a: 0 },
+        { q: "12. What is responsible for transport of iron in blood to liver?", o: ["Ferritin", "Transferrin", "Ceruloplasmin", "Hemosiderin"], a: 1 },
+        { q: "13. What is the immunoglobulin that share in hypersensitivity reaction?", o: ["IgM", "IgG", "IgE", "IgA"], a: 2 },
+        { q: "14. Which regenerates NAD+ from NADH+H in anaerobic glycolysis?", o: ["Lactate dehydrogenase", "Glyceraldehyde 3 p dehydrogenase", "Phosphoglycerate kinase", "PFK-1"], a: 0 },
+        { q: "15. In CAC, which enzyme need FAD?", o: ["Citrate synthase", "Succinate dehydrogenase", "Alpha keto glutarate dehydrogenase", "Malate dehydrogenase"], a: 1 },
+        { q: "16. What is the product in HMS?", o: ["NAD+", "NADH+H", "NADP", "NADPH+H"], a: 3 },
+        { q: "17. Cause of hemolytic anemia in G6PD deficiency?", o: ["Peroxidation of unsaturated fatty acids with H2O2", "No ATP", "Membrane spherocytosis"], a: 0 },
+        { q: "18. What is the main use of UDP glucuronic acid?", o: ["synthesis of NADPH", "ATP production", "Conjugation with bilirubin and steroids"], a: 2 },
+        { q: "19. Man in desert 2 days without food, which enzyme is high?", o: ["Glycogen synthase", "Phosphofructokinase", "Glucose 6 phosphatase", "Glucokinase"], a: 2 },
+        { q: "20. What enzyme is deficient in hereditary fructose intolerance?", o: ["Aldolase B", "Fructokinase", "Glucose 6 phosphatase", "Glycogen phosphorylase"], a: 0 },
+        { q: "21. What causes anemia in renal failure?", o: ["Folic acid deficiency", "Vit B12 deficiency", "Iron deficiency", "erythropoietin deficiency"], a: 3 },
+        { q: "22. Expectation for blood of a man living in Red Sea mountains?", o: ["Decreased hematocrit", "Low oxygen concentration", "Increased viscosity"], a: 2 },
+        { q: "23. What is an indication for blood transfusion?", o: ["Primary polycythemia", "Leukocytosis", "Leukocytopenia", "Secondary polycythemia"], a: 2 },
+        { q: "24. Rh- mother, Rh+ father, history of abortion. Result for 7-month fetus?", o: ["Hemolytic anemia of newborn", "Safe if O- transfusion", "Safe if D antigen after abortion"], a: 0 },
+        { q: "25. Role of reticulo-endothelial system?", o: ["Vascular spasm", "Platelet adhesion", "Defenses"], a: 2 },
+        { q: "26. What is responsible for blood fluidity?", o: ["Heparin and antithrombin 3", "Absence of plasminogen", "Slow blood flow", "Rough vascular system"], a: 0 },
+        { q: "27. Man with nose bleeding and hemorrhagic spots. Which cells increase?", o: ["Reticulocyte", "Thrombocyte", "Premyelocytes", "Normoblasts"], a: 0 },
+        { q: "28. What is in the medulla of the thymus?", o: ["Plasma cells", "B lymphocytes", "Phagocytic cells"], a: 2 },
+        { q: "29. Function of circumferential microtubules in platelets?", o: ["Maintenance of discoid shape", "Contraction", "Release of fibrinogen", "Adhesion"], a: 0 },
+        { q: "30. Responsible for flexibility of RBCs membrane?", o: ["Lack of nucleus", "Biconcave shape", "Well developed cytoskeleton", "Glycocalyx"], a: 2 },
+        { q: "31. O negative blood antibodies?", o: ["Anti a, anti b", "Anti a", "Anti a, anti b, anti D", "Anti b"], a: 0 },
+        { q: "32. Lead poisoning inhibits which enzyme?", o: ["AlA synthase", "AlA dehydratase", "Coproporphyrinogen oxidase", "Enolase"], a: 1 },
+        { q: "33. Fatigue after climbing mountain, Hb 11, Hct 38. Diagnosis?", o: ["Acute blood loss", "Sickle cell anemia", "Polycythemia", "Iron deficiency"], a: 1 },
+        { q: "34. Thymus histology vs Lymph node?", o: ["Lymphatic nodules everywhere", "Complete separate lobules", "No cortex/medulla", "Supportive network of epithelial reticular cells"], a: 3 },
+        { q: "35. Iron link in deoxyhemoglobin?", o: ["N of imidazole proximal histidine", "Oxygen", "Empty (not occupied)", "5,6 dimethyl benzimidazole"], a: 2 },
+
+        // SET 2 (40 Questions)
+        { q: "36. Adult hemoglobin tetramer structure?", o: ["Two alpha and two beta chains", "Four identical chains", "One alpha one beta", "Two alpha two gamma"], a: 0 },
+        { q: "37. 6th coordination bond with Fe2+ in Oxy-Hb?", o: ["Oxygen", "Distal histidine", "Empty", "Proximal histidine"], a: 0 },
+        { q: "38. Underlying cause of thalassemia?", o: ["Oxidized hemoglobin", "RBC formation defect", "Reduced synthesis of a globin chain", "Polymerization of hemoglobin"], a: 2 },
+        { q: "39. Distribution of hemoglobin in RBCs?", o: ["Peripheral rim", "Whole cytoplasm equally", "Biconvex borders", "Central part"], a: 0 },
+        { q: "40. Feature of platelet granulomere?", o: ["Dense tubular system", "Actin/myosin network", "Few ribosomes/glycogen", "Circumferential microtubules"], a: 2 },
+        { q: "41. Where does lymphopoiesis take place?", o: ["Secondary lymphoid tissues", "Lymph nodes", "Primary lymphoid organs", "Lymphoid nodules"], a: 2 },
+        { q: "42. What is plasma?", o: ["Blood minus cells and clotting factors", "Blood minus cells and proteins", "Blood minus RBCs", "Whole blood without blood cells"], a: 3 },
+        { q: "43. Nutrient for final maturation of RBCs?", o: ["Vit C", "Iron", "Vit B12", "Copper"], a: 2 },
+        { q: "44. Iron storage form in tissues?", o: ["Ferroportin", "Ceruloplasmin", "Transferrin", "Ferritin"], a: 3 },
+        { q: "45. Lead poisoning symptoms, Hb 8 g/dl. Enzyme affected?", o: ["ALA synthase", "ALA dehydratase", "PBG deaminase", "Coproporphyrinogen oxidase"], a: 1 },
+        { q: "46. Factors helping iron absorption?", o: ["Sulfur amino acids", "Neutral PH", "Oxidizing agent", "Alkaline PH"], a: 0 },
+        { q: "47. Coenzyme for one carbon metabolism?", o: ["Tetrahydrofolic acid", "Vitamin K", "Biotin", "Vitamin B12"], a: 0 },
+        { q: "48. Inner cortex cells description?", o: ["Interact with T cells", "Acquire surface Ig in thymus", "Reach thymus as CFU-L", "Migrate as promyelocytes"], a: 2 },
+        { q: "49. Components of blood thymic barrier?", o: ["Post capillary venules", "Medullary macrophages", "Continuous capillaries of cortex, pericytes, epithelial reticular cells", "Hassall's corpuscles"], a: 2 },
+        { q: "50. 1.5L blood loss from artery. Type of anemia?", o: ["Iron deficiency", "Macrocytic", "Microcytic", "Normochromic normocytic"], a: 3 },
+        { q: "51. Anemia from Vit B12 deficiency?", o: ["Microcytic", "Normocytic", "Pernicious", "Aplastic"], a: 2 },
+        { q: "52. Cause of primary polycythemia?", o: ["Lung disease", "Tumor of bone marrow", "High altitude", "Cardiac disease"], a: 1 },
+        { q: "53. Immunoglobulin classification base?", o: ["Light and heavy chains", "Light chains", "Heavy chains", "Molecular weight"], a: 2 },
+        { q: "54. ATPs produced by glucose oxidation in RBCs?", o: ["1", "0", "2", "3"], a: 2 },
+        { q: "55. Enzyme deficiency leading to hemolytic anemia?", o: ["Pyruvate kinase", "Phosphoglucomutase", "Glucokinase", "PFK"], a: 0 },
+        { q: "56. Palatine tonsil capsule structures?", o: ["Lymph sinuses", "Mucous acini", "Smooth muscle", "Blood sinusoids"], a: 1 },
+        { q: "57. Eosinophil specific granules EM characteristic?", o: ["Small electron dense", "Large electron lucent", "Medium granular", "Large with electron dense crystalloid core"], a: 3 },
+        { q: "58. Organelle responsible for reticulate pattern in reticulocytes?", o: ["Ribosomes", "Mitochondria", "Golgi", "Nucleus"], a: 0 },
+        { q: "59. Blood groups for AB negative person?", o: ["A-, B-, O+, AB+", "A+, B+, O+", "A-, B-, O-, AB-", "A+, B-"], a: 2 },
+        { q: "60. Conditions for erythroblastosis fetalis?", o: ["Rh+ father and Rh- mother", "Rh- father/mother", "Rh- mother/fetus", "Rh+ mother/fetus"], a: 0 },
+        { q: "61. Incompatible blood transfusion complication?", o: ["Hemolytic reaction", "Hypertension", "Liver failure", "Thrombosis"], a: 0 },
+        { q: "62. What are opsonins?", o: ["Complement products", "Tissue degeneration products", "Bacterial toxins", "Antibodies adhering to bacterial membrane"], a: 3 },
+        { q: "63. Coenzyme NOT involved in pyruvate dehydrogenase?", o: ["TPP", "Biotin", "NAD+", "FAD"], a: 1 },
+        { q: "64. Why is oxidative HMP important?", o: ["Ribose-5-P and NADPH", "Oxidize NADPH", "Hexose-6-P and NADH", "Generate NADH"], a: 0 },
+        { q: "65. Function of reduced glutathione in RBCs?", o: ["Reduce MetHb", "Reduce oxidizing agents like H2O2", "Produce NADPH", "Produce NADH"], a: 1 },
+        { q: "66. Factor involved in extrinsic pathway?", o: ["VIII", "XIII", "XII", "Tissue factor"], a: 3 },
+        { q: "67. Reaction requiring Calcium ions?", o: ["Factor XII activation", "Intrinsic step 1", "Platelet contact", "Polymerization of fibrin monomers"], a: 3 },
+        { q: "68. Main glucose source 24 hours after meal?", o: ["Gluconeogenesis in liver", "Muscle glycolysis", "Ketone bodies", "Muscle amino acids"], a: 0 },
+        { q: "69. When is glycogen synthase highly active?", o: ["High carbohydrate feeding", "Starvation", "High fat feeding", "Excess stores"], a: 0 },
+        { q: "70. Needed for UDP-G to UDP-glucuronic acid conversion?", o: ["NADH", "NAD", "GTP", "ATP"], a: 1 },
+        { q: "71. Deep vein thrombosis after bed rest. Main cause?", o: ["Factor deficiency", "Slow blood flow", "Vit K deficiency", "Platelet disorder"], a: 1 },
+        { q: "72. Factor preventing clot extension?", o: ["Vit K", "Heparin", "Prothrombin", "Rough endothelium"], a: 1 },
+        { q: "73. Essential fructosuria enzyme deficiency?", o: ["Fructokinase", "Triose kinase", "Hexokinase", "Aldolase B"], a: 0 },
+        { q: "74. Hb type for assessing diabetic control?", o: ["HbA1", "HbA2", "HbM", "HbA1c"], a: 3 },
+        { q: "75. Hereditary fructose intolerance enzyme deficiency?", o: ["G6Pase", "Fructokinase", "Liver Aldolase B", "Muscle phosphorylase"], a: 2 },
+
+        // SET 3 (70 Questions Selection)
+        { q: "76. Product having a high energy bond?", o: ["Glucose-6-P", "Lactate", "Phosphoenolpyruvate", "DHAP"], a: 2 },
+        { q: "77. Deficiency leading to hemolytic anemia?", o: ["Pyruvate kinase", "Succinate dehydrogenase", "Citrate synthase", "Aconitase"], a: 0 },
+        { q: "78. Hemolytic anemia after eating fava beans. Reason?", o: ["Glucokinase def.", "G6PD deficiency", "G6Pase def.", "Pyruvate kinase def."], a: 1 },
+        { q: "79. Enzyme producing CO2 in HMP?", o: ["G6PD", "Lactonase", "6-phosphogluconate dehydrogenase", "Transketolase"], a: 2 },
+        { q: "80. Inhibited by malonic acid?", o: ["Succinate Dehydrogenase", "Citrate synthase", "Alpha-KG Dehydrogenase", "Aconitase"], a: 0 },
+        { q: "81. Co-enzyme for pyruvate dehydrogenase?", o: ["NADP", "PLP", "Vit K", "CoA"], a: 3 },
+        { q: "82. Where does gluconeogenesis occur?", o: ["Muscle", "Kidney", "Brain", "Spleen"], a: 1 },
+        { q: "83. Committed step in glycolysis?", o: ["G to G6P", "F6P to F-1,6-BP", "G3P to 1,3-BPG", "3-PG to 2-PG"], a: 1 },
+        { q: "84. Link between glycolysis and CAC?", o: ["G6PD", "Pyruvate Dehydrogenase", "Citrate synthase", "Alpha-KGDH"], a: 1 },
+        { q: "85. Favors gluconeogenesis over glycolysis?", o: ["Starvation", "High glucose", "High AMP", "Low ATP"], a: 0 },
+        { q: "86. Expose alpha 1,6 branching point in glycogenolysis?", o: ["Phosphorylase", "Debranching enzyme", "Glucan transferase", "Synthase"], a: 2 },
+        { q: "87. Macrocyte cells, GI disturbance, NO neurological signs. Deficient?", o: ["B12", "Vit K", "Vit C", "Folic acid"], a: 3 },
+        { q: "88. Released by endothelial cells to protect against thrombosis?", o: ["Heparin", "Prostacyclin", "Thromboxane", "Endothelin"], a: 1 },
+        { q: "89. Iron state in transferrin?", o: ["Ferric and ferrous", "Ferric", "Neither", "Ferrous"], a: 1 },
+        { q: "90. Trigger for activation of extrinsic pathway?", o: ["TFPI", "Factor 12", "Tissue factor", "Contact"], a: 2 },
+        { q: "91. Increase in erythropoietin seen in?", o: ["Renal disease", "Respiratory disease", "Liver disease", "Sea level"], a: 1 },
+        { q: "92. Secondary polycythemia cause?", o: ["Chronic lung disease", "BM tumor", "RBC > 5m", "Viscosity"], a: 0 },
+        { q: "93. 5th coordination bond of iron in Hb?", o: ["Oxygen", "N of imidazole proximal histidine", "Distal Histidine", "Empty"], a: 1 },
+        { q: "94. Absorbance of most activated iron?", o: ["Ileum", "Duodenum", "Stomach", "Intestine"], a: 1 },
+        { q: "95. Coagulation factor carboxylation vitamin?", o: ["D", "E", "K", "A"], a: 2 },
+        { q: "96. Stage where specific granules appear?", o: ["Promyelocyte", "Myelocyte", "Metamyelocyte", "Myeloblast"], a: 1 },
+        { q: "97. Completed Hb synthesis stage?", o: ["Normoblast", "Proerythroblast", "Basophilic", "Polychromatic"], a: 0 },
+        { q: "98. Last stage for cell division in erythropoiesis?", o: ["Proerythroblast", "Basophilic", "Polychromatic", "Normoblast"], a: 2 },
+        { q: "99. Open canalicular system true regarding?", o: ["Membrane bounded canaliculi", "ER remnants", "In granulomere", "Discoid shape"], a: 0 },
+        { q: "100. Thymus dependent area of spleen?", o: ["Splenic cords", "Medullary cords", "PALS", "Loose tissue"], a: 2 },
+        { q: "101. Paracortical area of lymph node main cells?", o: ["T lymphocytes", "Macrophages", "B lymphocytes", "Plasma cells"], a: 0 },
+        { q: "102. Erythropoietin low, RBC 8 million. Diagnosis?", o: ["Thrombocytopenia", "Leukopenia", "Polycythemia vera", "Secondary"], a: 3 },
+        { q: "103. Blood with anti-A, no anti-B, no anti-Rh detected. Type?", o: ["O", "AB", "B negative or B positive", "A"], a: 2 },
+        { q: "104. Prevent erythroblastosis fetalis?", o: ["Rh agg after secondary labor", "Rh agg after each labor", "Antigen after secondary", "Antigen each labor"], a: 1 },
+        { q: "105. Secreted by platelets for clot retraction?", o: ["TXA2", "vWF", "Serotonin", "FSF"], a: 3 },
+        { q: "106. Heparin mechanism?", o: ["Activate AT III", "Activate Protein C", "Inhibit AT III", "Inhibit Protein C"], a: 0 },
+        { q: "107. Epithelial reticular cells function in thymus?", o: ["Phagocytosis", "Supporting", "Nutritive", "Storage"], a: 1 },
+        { q: "108. Warfarin antagonist effect?", o: ["Prothrombin deficiency", "Iron def.", "EPO def.", "Factor VIII def."], a: 0 },
+        { q: "109. Maintaining blood volume plasma protein?", o: ["Globulin", "Albumin", "Fibrinogen", "Prothrombin"], a: 1 },
+        { q: "110. Final product of HMS?", o: ["NAD", "NADP", "NADPH+H", "NADH"], a: 2 }
+    ];
+
+    let currentIdx = 0;
+    let userAnswers = new Array(examData.length).fill(null);
+
+    function initTopBar() {
+        const bar = document.getElementById('top-bar');
+        bar.innerHTML = '';
+        examData.forEach((_, i) => {
+            const div = document.createElement('div');
+            div.className = 'q-circle';
+            div.id = `nav-${i}`;
+            div.innerText = i + 1;
+            div.onclick = () => jumpTo(i);
+            bar.appendChild(div);
+        });
+        updateUI();
+    }
+
+    function updateUI() {
+        // Update top bar circles
+        examData.forEach((_, i) => {
+            const div = document.getElementById(`nav-${i}`);
+            div.classList.remove('active', 'correct', 'wrong');
+            if (i === currentIdx) div.classList.add('active');
+            if (userAnswers[i] === 'correct') div.classList.add('correct');
+            if (userAnswers[i] === 'wrong') div.classList.add('wrong');
+        });
+
+        // Scroll top bar to current question
+        const activeCircle = document.getElementById(`nav-${currentIdx}`);
+        activeCircle.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+        // Update Button States
+        document.getElementById('prev-btn').disabled = (currentIdx === 0);
+        document.getElementById('next-btn').disabled = (currentIdx === examData.length - 1);
+        
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = examData[currentIdx];
+        document.getElementById('q-text').innerText = q.q;
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+
+        q.o.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt';
+            btn.innerText = opt;
+            
+            // If already answered, show the result
+            if (userAnswers[currentIdx] !== null) {
+                if (i === q.a) btn.classList.add('correct-opt');
+                btn.disabled = true;
+            }
+            
+            btn.onclick = () => selectOption(i, btn);
+            container.appendChild(btn);
+        });
+    }
+
+    function selectOption(index, btn) {
+        const q = examData[currentIdx];
+        const allBtns = document.querySelectorAll('.opt');
+
+        if (index === q.a) {
+            btn.classList.add('correct-opt');
+            userAnswers[currentIdx] = 'correct';
+        } else {
+            btn.classList.add('wrong-opt');
+            allBtns[q.a].classList.add('correct-opt');
+            userAnswers[currentIdx] = 'wrong';
+        }
+
+        allBtns.forEach(b => b.disabled = true);
+        updateUI();
+    }
+
+    function nextQuestion() {
+        if (currentIdx < examData.length - 1) {
+            currentIdx++;
+            updateUI();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentIdx > 0) {
+            currentIdx--;
+            updateUI();
+        }
+    }
+
+    function jumpTo(index) {
+        currentIdx = index;
+        updateUI();
+    }
+
+    function toggleTheme() {
+        const body = document.body;
+        const current = body.getAttribute('data-theme');
+        body.setAttribute('data-theme', current === 'light' ? 'dark' : 'light');
+    }
+
+    initTopBar();
+</script>
+</body>
+</html>
