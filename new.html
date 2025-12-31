@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Med Questions</title>
+    <title>Med Questions - Pro Version</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --bg: #f5f7fa;
@@ -27,7 +28,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
@@ -39,19 +40,64 @@
             overflow-x: hidden;
         }
 
-        /* Sidebar - مخفي تماماً في الرئيسية */
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* تعديل أنيميشن الهزة لضمان عدم سقوط السؤال */
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+            transform: translate3d(0, 0, 0);
+        }
+
+        @keyframes shake {
+
+            10%,
+            90% {
+                transform: translate3d(-1px, 0, 0);
+            }
+
+            20%,
+            80% {
+                transform: translate3d(2px, 0, 0);
+            }
+
+            30%,
+            50%,
+            70% {
+                transform: translate3d(-4px, 0, 0);
+            }
+
+            40%,
+            60% {
+                transform: translate3d(4px, 0, 0);
+            }
+        }
+
         .sidebar {
             position: fixed;
             top: 0;
-            left: -280px;
+            left: -285px;
             width: 260px;
             height: 100%;
             background: var(--card);
             z-index: 4000;
-            transition: 0.3s ease;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             padding: 20px;
             overflow-y: auto;
-            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2);
             display: none;
             flex-wrap: wrap;
             gap: 8px;
@@ -70,7 +116,7 @@
             cursor: pointer;
             background: var(--primary);
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 12px;
             display: none;
             flex-direction: column;
             gap: 4px;
@@ -84,8 +130,8 @@
         }
 
         .dot {
-            width: 35px;
-            height: 35px;
+            width: 38px;
+            height: 38px;
             border-radius: 10px;
             background: var(--unsolved);
             color: white;
@@ -94,11 +140,13 @@
             justify-content: center;
             cursor: pointer;
             font-weight: bold;
+            transition: 0.2s;
         }
 
         .dot.active {
-            border: 2px solid var(--primary);
-            transform: scale(1.1);
+            transform: scale(1.15);
+            box-shadow: 0 0 10px var(--primary);
+            border: 2px solid white;
         }
 
         .dot.correct {
@@ -112,38 +160,45 @@
         #home-page {
             margin-top: 50px;
             width: 95%;
-            max-width: 1000px;
+            max-width: 1100px;
             text-align: center;
         }
 
         .module-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
         }
 
         .card {
             background: var(--card);
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 20px;
             border: 2px solid var(--border);
             cursor: pointer;
             position: relative;
-            transition: 0.2s;
+            transition: 0.3s;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
 
         .card-banner {
             width: calc(100% + 40px);
             margin: -20px -20px 15px -20px;
-            height: 150px;
+            height: 160px;
             object-fit: cover;
         }
 
-        /* الدائرة الحمراء بالكتابة البيضاء */
         .badge {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: var(--wrong);
             display: flex;
@@ -154,11 +209,10 @@
             margin-bottom: 10px;
         }
 
-        /* زر النقاط الثلاث المصلح */
         .dots-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 12px;
+            right: 12px;
             font-size: 24px;
             color: white;
             background: rgba(0, 0, 0, 0.3);
@@ -174,28 +228,23 @@
 
         .card-menu {
             position: absolute;
-            top: 50px;
-            right: 10px;
+            top: 52px;
+            right: 12px;
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 12px;
             display: none;
             z-index: 100;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-            min-width: 150px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
         .card-menu div {
-            padding: 12px 15px;
+            padding: 12px 20px;
             font-size: 14px;
             font-weight: bold;
             cursor: pointer;
             color: var(--text);
             border-bottom: 1px solid var(--border);
-        }
-
-        .card-menu div:last-child {
-            border-bottom: none;
         }
 
         .card-menu div:hover {
@@ -211,33 +260,37 @@
 
         .quiz-card {
             background: var(--card);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 35px;
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .opt {
             display: block;
             width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+            border: 2px solid var(--border);
+            border-radius: 15px;
             background: var(--card);
             color: var(--text);
             text-align: left;
             cursor: pointer;
-            font-size: 1rem;
+            transition: 0.2s;
         }
 
         .correct-opt {
             background: var(--correct) !important;
             color: white !important;
+            border-color: var(--correct);
         }
 
         .wrong-opt {
             background: var(--wrong) !important;
             color: white !important;
+            border-color: var(--wrong);
         }
 
         #success-screen {
@@ -249,33 +302,35 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
         }
 
-        .footer {
-            margin-top: 50px;
-            padding: 20px;
-            font-weight: bold;
-            text-align: center;
-            width: 100%;
-            border-top: 1px solid var(--border);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .start-btn {
-            width: 100%;
-            padding: 14px;
+        .action-btn {
+            padding: 14px 25px;
             border: none;
             border-radius: 12px;
             background: var(--primary);
             color: white;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
-            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding: 25px;
+            font-weight: bold;
+            border-top: 1px solid var(--border);
+            width: 100%;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
@@ -289,13 +344,13 @@
     <div id="sidebar" class="sidebar"></div>
 
     <div style="position: fixed; top: 15px; right: 15px; display: flex; gap: 10px; z-index: 3000;">
-        <button id="home-btn" class="hidden" onclick="goHome()"
-            style="padding: 10px 15px; border-radius: 8px; cursor: pointer; background: var(--card); color: var(--text); border: 1px solid var(--border);">🏠</button>
-        <button onclick="toggleTheme()"
-            style="padding: 10px 15px; border-radius: 8px; cursor: pointer; background: var(--card); color: var(--text); border: 1px solid var(--border);">🌓</button>
+        <button id="home-btn" class="hidden action-btn" onclick="location.reload()"
+            style="padding: 10px 15px;">🏠</button>
+        <button onclick="toggleTheme()" class="action-btn"
+            style="padding: 10px 15px; background: var(--card); color: var(--text); border: 1px solid var(--border);">🌓</button>
     </div>
 
-    <div id="home-page">
+    <div id="home-page" class="fade-in">
         <h1>1st year Questions</h1>
         <div class="module-grid">
             <div class="card" onclick="startSession('blood')">
@@ -306,7 +361,7 @@
                 <img src="blood.png" class="card-banner">
                 <div class="badge" id="count-blood">0</div>
                 <h3>Blood Module</h3>
-                <button class="start-btn">Start Quiz</button>
+                <button class="action-btn" style="width: 100%;">Start Quiz</button>
             </div>
 
             <div class="card" onclick="startSession('foundation')">
@@ -317,38 +372,41 @@
                 <img src="found.png" class="card-banner">
                 <div class="badge" id="count-foundation">0</div>
                 <h3>Foundation</h3>
-                <button class="start-btn">Start Quiz</button>
+                <button class="action-btn" style="width: 100%;">Start Quiz</button>
             </div>
 
             <div class="card" onclick="startSession('wrong')">
                 <img src="wrong.jpg" class="card-banner">
                 <div class="badge" id="count-wrong">0</div>
                 <h3>Incorrect List</h3>
-                <button class="start-btn" style="background:var(--wrong)">Solve Errors</button>
+                <button class="action-btn" style="width: 100%; background: var(--wrong);">Solve Errors</button>
             </div>
         </div>
         <div class="footer">Directed by Dr/Mahmoud & Abdallah</div>
     </div>
 
     <div id="quiz-area">
-        <div class="quiz-card">
-            <div id="q-text" style="font-weight: bold; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6;"></div>
+        <div class="quiz-card fade-in" id="q-container">
+            <div id="q-text" style="font-weight: bold; font-size: 1.2rem; margin-bottom: 25px;"></div>
             <div id="options-box"></div>
             <div style="display:flex; gap:12px; margin-top:25px;">
-                <button class="start-btn" style="background:#636e72" onclick="prev()">← Previous</button>
-                <button class="start-btn" onclick="next()">Next →</button>
+                <button class="action-btn" style="background:#636e72; flex:1;" onclick="prev()">← Previous</button>
+                <button class="action-btn" style="flex:1;" onclick="next()">Next →</button>
             </div>
         </div>
     </div>
 
     <div id="success-screen">
-        <h1 style="font-size: 5rem; margin-bottom: 10px;">🥳</h1>
-        <h2 style="margin-bottom: 20px;">All Done! Well Played.</h2>
-        <button class="start-btn" style="width: 220px;" onclick="location.reload()">Back to Home</button>
+        <h1 style="font-size: 4rem; margin: 0;">🎉</h1>
+        <h2>Well Done!</h2>
+        <div style="display: flex; gap: 15px; margin-top: 20px;">
+            <button class="action-btn" style="background: var(--correct);" onclick="reviewMode()">🔍 Review
+                Answers</button>
+            <button class="action-btn" onclick="location.reload()">🏠 Home</button>
+        </div>
     </div>
 
     <script>
-        // داتا تجريبية
         const BLOOD_QUESTIONS = [
             { q: "in anaerobic glycolysis, which of the following do you expect to increase in concentration after addition of fluoride…….?", o: ["a. Glucose", "b. 2-phosphoglycerate", "c. Phosphoenol pyruvate", "d. Pyruvate"], a: 1 },
             { q: "What is the most common plasma protein ?", o: ["a. Albumin", "b. Fibrinogen", "c. Globulin", "d. Prothrombin"], a: 0 },
@@ -502,27 +560,28 @@
 
         let sessionQs = [];
         let currentIdx = 0;
-        let progress = JSON.parse(localStorage.getItem('medQuizV8')) || {};
+        let progress = JSON.parse(localStorage.getItem('medV12')) || {};
+        let isReview = false;
 
         (function init() {
-            const theme = localStorage.getItem('medTheme') || 'light';
-            document.body.setAttribute('data-theme', theme);
+            const savedTheme = localStorage.getItem('medTheme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
             updateDashboard();
         })();
 
         function toggleTheme() {
-            const newTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            const current = document.body.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
             document.body.setAttribute('data-theme', newTheme);
             localStorage.setItem('medTheme', newTheme);
         }
 
         function updateDashboard() {
-            document.getElementById('count-blood').innerText = BLOOD_QUESTIONS.filter(q => progress[q.q] !== 'correct' && progress[q.q] !== 'wrong').length;
-            document.getElementById('count-foundation').innerText = FOUNDATION_QUESTIONS.filter(q => progress[q.q] !== 'correct' && progress[q.q] !== 'wrong').length;
+            document.getElementById('count-blood').innerText = BLOOD_QUESTIONS.filter(q => !progress[q.q]).length;
+            document.getElementById('count-foundation').innerText = FOUNDATION_QUESTIONS.filter(q => !progress[q.q]).length;
             document.getElementById('count-wrong').innerText = ALL_DATA.filter(q => progress[q.q] === 'wrong').length;
         }
 
-        // فتح قائمة الـ Reset
         function toggleCardMenu(e, id) {
             e.stopPropagation();
             const menu = document.getElementById(id);
@@ -531,43 +590,42 @@
             if (!isVisible) menu.style.display = 'block';
         }
 
-        // إغلاق كل القوائم
         function closeAllMenus() {
             document.querySelectorAll('.card-menu').forEach(m => m.style.display = 'none');
         }
 
-        // تنفيذ الـ Reset وإخفاء القائمة فوراً
         function resetProgress(e, type) {
-            e.stopPropagation(); // منع فتح الكويز عند الضغط على ريست
-            if (!confirm("Are you sure you want to reset progress for this section?")) return;
-
-            ALL_DATA.filter(q => q.mod === type).forEach(q => delete progress[q.q]);
-            localStorage.setItem('medQuizV8', JSON.stringify(progress));
-
-            closeAllMenus(); // القائمة تختفي هنا فوراً
+            e.stopPropagation();
+            if (!confirm("Reset progress for this section?")) return;
+            if (type === 'wrong') {
+                ALL_DATA.forEach(q => { if (progress[q.q] === 'wrong') delete progress[q.q]; });
+            } else {
+                ALL_DATA.filter(q => q.mod === type).forEach(q => delete progress[q.q]);
+            }
+            localStorage.setItem('medV12', JSON.stringify(progress));
+            closeAllMenus();
             updateDashboard();
         }
 
         function startSession(type) {
             let baseQs = (type === 'wrong')
                 ? ALL_DATA.filter(q => progress[q.q] === 'wrong')
-                : ALL_DATA.filter(q => q.mod === type && progress[q.q] !== 'correct' && progress[q.q] !== 'wrong');
+                : ALL_DATA.filter(q => q.mod === type && !progress[q.q]);
 
-            if (baseQs.length === 0) return alert("No questions available in this section!");
+            if (baseQs.length === 0) return alert("No questions found!");
 
             let num = prompt(`Enter number of questions (Max ${baseQs.length}):`, baseQs.length);
             if (num === null) return;
 
             sessionQs = baseQs.sort(() => Math.random() - 0.5).slice(0, parseInt(num) || baseQs.length);
             currentIdx = 0;
+            isReview = false;
 
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('quiz-area').style.display = 'block';
             document.getElementById('home-btn').classList.remove('hidden');
-
-            // تفعيل الـ Sidebar وزره فقط في الكويز
-            document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('menu-trigger').style.display = 'flex';
+            document.getElementById('sidebar').style.display = 'flex';
 
             renderSidebar();
             loadQ();
@@ -575,13 +633,26 @@
 
         function loadQ() {
             const q = sessionQs[currentIdx];
+            const qContainer = document.getElementById('q-container');
+            qContainer.classList.remove('shake'); // إزالة الهزة القديمة
+
             document.getElementById('q-text').innerText = q.q;
             const box = document.getElementById('options-box');
             box.innerHTML = '';
+
             q.o.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'opt'; btn.innerText = opt;
-                btn.onclick = () => handleAnswer(i, q, btn);
+
+                const alreadySolvedInThisSession = q.sessionSolved === true;
+
+                if ((progress[q.q] === 'correct' || alreadySolvedInThisSession || isReview)) {
+                    btn.disabled = true;
+                    if (i === q.a) btn.classList.add('correct-opt');
+                    if (progress[q.q] === 'wrong' && q.lastAnswer === i) btn.classList.add('wrong-opt');
+                } else {
+                    btn.onclick = () => handleAnswer(i, q, btn);
+                }
                 box.appendChild(btn);
             });
             updateDots();
@@ -589,21 +660,46 @@
 
         function handleAnswer(choice, q, btn) {
             const isCorrect = choice === q.a;
+            q.lastAnswer = choice;
+            q.sessionSolved = true;
             document.querySelectorAll('.opt').forEach(b => b.disabled = true);
-            if (isCorrect) { btn.classList.add('correct-opt'); progress[q.q] = 'correct'; }
-            else { btn.classList.add('wrong-opt'); progress[q.q] = 'wrong'; }
-            localStorage.setItem('medQuizV8', JSON.stringify(progress));
+
+            if (isCorrect) {
+                btn.classList.add('correct-opt');
+                progress[q.q] = 'correct';
+                confetti({ particleCount: 40, spread: 50, origin: { y: 0.8 } });
+            } else {
+                btn.classList.add('wrong-opt');
+                document.querySelectorAll('.opt')[q.a].classList.add('correct-opt');
+
+                // إضافة الهزة للكارت مع ضمان بقاء مكانه
+                const qContainer = document.getElementById('q-container');
+                qContainer.classList.add('shake');
+                progress[q.q] = 'wrong';
+            }
+            localStorage.setItem('medV12', JSON.stringify(progress));
             updateDots();
             updateDashboard();
 
             if (currentIdx === sessionQs.length - 1) {
-                setTimeout(() => document.getElementById('success-screen').style.display = 'flex', 800);
+                setTimeout(() => {
+                    document.getElementById('quiz-area').style.display = 'none';
+                    document.getElementById('success-screen').style.display = 'flex';
+                    confetti({ particleCount: 150, spread: 100 });
+                }, 1000);
             }
+        }
+
+        function reviewMode() {
+            isReview = true; currentIdx = 0;
+            document.getElementById('success-screen').style.display = 'none';
+            document.getElementById('quiz-area').style.display = 'block';
+            loadQ();
         }
 
         function renderSidebar() {
             const side = document.getElementById('sidebar');
-            side.innerHTML = '<h3 style="width:100%; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px;">Questions List</h3>';
+            side.innerHTML = '<h3 style="width:100%; border-bottom: 2px solid var(--primary); padding-bottom:10px;">Progress</h3>';
             sessionQs.forEach((_, i) => {
                 const d = document.createElement('div');
                 d.className = 'dot'; d.innerText = i + 1; d.id = `dot-${i}`;
@@ -617,15 +713,19 @@
                 d.classList.remove('active');
                 if (i === currentIdx) d.classList.add('active');
                 const state = progress[sessionQs[i].q];
-                if (state === 'correct') { d.classList.add('correct'); d.classList.remove('wrong'); }
-                else if (state === 'wrong') { d.classList.add('wrong'); d.classList.remove('correct'); }
+                const solvedInSession = sessionQs[i].sessionSolved;
+
+                if (state === 'correct') d.className = 'dot correct';
+                else if (state === 'wrong' && solvedInSession) d.className = 'dot wrong';
+                else d.className = 'dot';
             });
         }
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
         function next() { if (currentIdx < sessionQs.length - 1) { currentIdx++; loadQ(); } }
         function prev() { if (currentIdx > 0) { currentIdx--; loadQ(); } }
-        function goHome() { location.reload(); }
+
+        updateDashboard();
     </script>
 </body>
 
