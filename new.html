@@ -15,7 +15,6 @@
             --wrong: #d63031;
             --border: #dfe6e9;
             --unsolved: #b2bec3;
-            --transition: all 0.3s ease;
         }
 
         body[data-theme='dark'] {
@@ -32,13 +31,15 @@
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            transition: var(--transition);
+            transition: 0.3s;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Sidebar Navigation */
+        /* Sidebar - مخفي تماماً في الرئيسية */
         .sidebar {
             position: fixed;
             top: 0;
@@ -46,37 +47,57 @@
             width: 260px;
             height: 100%;
             background: var(--card);
-            z-index: 3000;
-            transition: 0.3s;
+            z-index: 4000;
+            transition: 0.3s ease;
             padding: 20px;
             overflow-y: auto;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
-            display: flex;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
+            display: none;
             flex-wrap: wrap;
             gap: 8px;
             align-content: flex-start;
         }
 
         .sidebar.open {
-            left: 0;
+            left: 0 !important;
+        }
+
+        #menu-trigger {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 5000;
+            cursor: pointer;
+            background: var(--primary);
+            padding: 12px;
+            border-radius: 10px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        #menu-trigger span {
+            width: 20px;
+            height: 3px;
+            background: white;
+            border-radius: 2px;
         }
 
         .dot {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
             background: var(--unsolved);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 0.9rem;
             font-weight: bold;
         }
 
         .dot.active {
-            border: 3px solid var(--primary);
+            border: 2px solid var(--primary);
             transform: scale(1.1);
         }
 
@@ -97,129 +118,108 @@
 
         .module-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
             margin-top: 30px;
         }
 
-        /* Card Styles */
         .card {
             background: var(--card);
-            border-radius: 24px;
-            padding: 25px;
+            border-radius: 20px;
+            padding: 20px;
             border: 2px solid var(--border);
             cursor: pointer;
             position: relative;
-            transition: var(--transition);
-            overflow: hidden;
-            text-align: left;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+            transition: 0.2s;
         }
 
         .card-banner {
-            width: calc(100% + 50px);
-            margin: -25px -25px 15px -25px;
-            height: 160px;
+            width: calc(100% + 40px);
+            margin: -20px -20px 15px -20px;
+            height: 150px;
             object-fit: cover;
         }
 
-        /* Badge - الدائرة الحمراء بالكتابة البيضاء */
+        /* الدائرة الحمراء بالكتابة البيضاء */
         .badge {
-            width: 45px;
-            height: 45px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: var(--wrong);
-            /* اللون الأحمر */
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             color: white;
-            /* الكتابة البيضاء */
             margin-bottom: 10px;
-            box-shadow: 0 4px 8px rgba(214, 48, 49, 0.3);
         }
 
-        /* القائمة المنبثقة للـ Reset */
+        /* زر النقاط الثلاث المصلح */
         .dots-btn {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            color: white;
+            background: rgba(0, 0, 0, 0.3);
             width: 35px;
             height: 35px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 50%;
             z-index: 10;
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
+            cursor: pointer;
         }
 
         .card-menu {
             position: absolute;
-            top: 55px;
-            right: 15px;
+            top: 50px;
+            right: 10px;
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
             display: none;
-            z-index: 20;
+            z-index: 100;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            min-width: 150px;
         }
 
         .card-menu div {
-            padding: 12px 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 12px 15px;
+            font-size: 14px;
+            font-weight: bold;
             cursor: pointer;
             color: var(--text);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-menu div:last-child {
+            border-bottom: none;
         }
 
         .card-menu div:hover {
             background: var(--bg);
         }
 
-        .start-btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: var(--primary);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
         #quiz-area {
             display: none;
             width: 90%;
             max-width: 800px;
-            flex-direction: column;
-            align-items: center;
             margin-top: 80px;
         }
 
         .quiz-card {
             background: var(--card);
-            width: 100%;
-            padding: 35px;
-            border-radius: 25px;
+            padding: 30px;
+            border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .opt {
             display: block;
             width: 100%;
-            padding: 16px;
+            padding: 15px;
             margin: 10px 0;
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -228,7 +228,6 @@
             text-align: left;
             cursor: pointer;
             font-size: 1rem;
-            transition: 0.2s;
         }
 
         .correct-opt {
@@ -241,38 +240,42 @@
             color: white !important;
         }
 
+        #success-screen {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
         .footer {
             margin-top: 50px;
-            padding: 30px;
+            padding: 20px;
             font-weight: bold;
-            border-top: 2px solid var(--border);
-            width: 100%;
             text-align: center;
+            width: 100%;
+            border-top: 1px solid var(--border);
         }
 
         .hidden {
             display: none !important;
         }
 
-        #menu-trigger {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 3001;
-            cursor: pointer;
+        .start-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
             background: var(--primary);
-            padding: 10px;
-            border-radius: 8px;
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        #menu-trigger span {
-            width: 22px;
-            height: 3px;
-            background: white;
-            border-radius: 2px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 1rem;
         }
     </style>
 </head>
@@ -285,22 +288,20 @@
 
     <div id="sidebar" class="sidebar"></div>
 
-    <div style="position: fixed; top: 15px; right: 15px; display: flex; gap: 10px; z-index: 2000;">
+    <div style="position: fixed; top: 15px; right: 15px; display: flex; gap: 10px; z-index: 3000;">
         <button id="home-btn" class="hidden" onclick="goHome()"
-            style="padding: 10px 15px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--text);">🏠
-            Home</button>
+            style="padding: 10px 15px; border-radius: 8px; cursor: pointer; background: var(--card); color: var(--text); border: 1px solid var(--border);">🏠</button>
         <button onclick="toggleTheme()"
-            style="padding: 10px 15px; border-radius: 8px; cursor: pointer; border: 1px solid var(--border); background: var(--card); color: var(--text);">🌓
-            Theme</button>
+            style="padding: 10px 15px; border-radius: 8px; cursor: pointer; background: var(--card); color: var(--text); border: 1px solid var(--border);">🌓</button>
     </div>
 
     <div id="home-page">
         <h1>1st year Questions</h1>
         <div class="module-grid">
             <div class="card" onclick="startSession('blood')">
-                <div class="dots-btn" onclick="event.stopPropagation(); toggleCardMenu('menu-blood')">⋮</div>
+                <div class="dots-btn" onclick="toggleCardMenu(event, 'menu-blood')">⋮</div>
                 <div id="menu-blood" class="card-menu">
-                    <div onclick="resetProgress('blood')">🔄 Reset Section</div>
+                    <div onclick="resetProgress(event, 'blood')">🔄 Reset Progress</div>
                 </div>
                 <img src="blood.png" class="card-banner">
                 <div class="badge" id="count-blood">0</div>
@@ -309,9 +310,9 @@
             </div>
 
             <div class="card" onclick="startSession('foundation')">
-                <div class="dots-btn" onclick="event.stopPropagation(); toggleCardMenu('menu-found')">⋮</div>
+                <div class="dots-btn" onclick="toggleCardMenu(event, 'menu-found')">⋮</div>
                 <div id="menu-found" class="card-menu">
-                    <div onclick="resetProgress('foundation')">🔄 Reset Section</div>
+                    <div onclick="resetProgress(event, 'foundation')">🔄 Reset Progress</div>
                 </div>
                 <img src="found.png" class="card-banner">
                 <div class="badge" id="count-foundation">0</div>
@@ -331,7 +332,7 @@
 
     <div id="quiz-area">
         <div class="quiz-card">
-            <div id="q-text" style="font-weight: bold; font-size: 1.2rem; margin-bottom: 25px;"></div>
+            <div id="q-text" style="font-weight: bold; font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6;"></div>
             <div id="options-box"></div>
             <div style="display:flex; gap:12px; margin-top:25px;">
                 <button class="start-btn" style="background:#636e72" onclick="prev()">← Previous</button>
@@ -340,7 +341,14 @@
         </div>
     </div>
 
+    <div id="success-screen">
+        <h1 style="font-size: 5rem; margin-bottom: 10px;">🥳</h1>
+        <h2 style="margin-bottom: 20px;">All Done! Well Played.</h2>
+        <button class="start-btn" style="width: 220px;" onclick="location.reload()">Back to Home</button>
+    </div>
+
     <script>
+        // داتا تجريبية
         const BLOOD_QUESTIONS = [
             { q: "in anaerobic glycolysis, which of the following do you expect to increase in concentration after addition of fluoride…….?", o: ["a. Glucose", "b. 2-phosphoglycerate", "c. Phosphoenol pyruvate", "d. Pyruvate"], a: 1 },
             { q: "What is the most common plasma protein ?", o: ["a. Albumin", "b. Fibrinogen", "c. Globulin", "d. Prothrombin"], a: 0 },
@@ -352,7 +360,7 @@
             { q: "What is the rate limiting enzyme in Glycogen degradation ?", o: ["a. AlA synthase", "b. Glycogen synthase", "c. Glucose 6 phosphatase", "d. Glycogen phosphorylase"], a: 3 },
             { q: "What is the importance of Vit B12 ?", o: ["a. Synthesis of some coagulation factors", "b. Participate in methylation of homocysteine to methionine", "c. Activate platelets aggregation"], a: 1 },
             { q: "A 28-year old woman came to a doctor with loss in hand sensation, when taking the history, she said that she has been a vegetarian for two years , in her CBC , the doctor found that she has megaloplastic anemia , what is the cause of anemia…….", o: ["a. Folic acid deficiency", "b. Vit B 12 deficiency", "c. Iron deficiency", "d. Chronic blood loss"], a: 1 },
-            { q: "What is the role of vitamin K ?", o: ["a. Synthesis of some coagulation factors"], a: 0 },
+            { q: "What is the role of vitamin K?", o: ["a. Synthesis of some coagulation factors", "b. Iron transport", "c. Oxygen binding", "d. Glucose metabolism"], a: 0 },
             { q: "What is responsible for transport of iron in blood to liver ?", o: ["a. Ferritin", "b. Transferrin", "c. Ceruloplasmin", "d. Hemosiderin"], a: 1 },
             { q: "What is the immunoglobulin that share in hypersensitivity reaction ?", o: ["a. IgM", "b. IgG", "c. IgE", "d. IgA"], a: 2 },
             { q: "Which of the following that regenerate NAD+ from NADH+H in anaerobic glycolysis ?", o: ["a. Lactate dehydrogenase", "b. Glyceraldehyde 3 p dehydrogenase", "c. Phosphoglycerate kinase", "d. PFK-1"], a: 0 },
@@ -445,7 +453,6 @@
             { q: "The iron state in transferrin is", o: ["a. Ferric and ferrous", "b. Ferric", "c. Not ferric or ferrous", "d. Ferrous"], a: 1 },
             { q: "The major amount of transferrin receptors are on the surface of…….", o: ["a. Microphage", "b. erythropoiesis stem cells", "c. Placenta", "d. Kidney"], a: 1 },
             { q: "Which of the following immunoglobulins is present in oral mucosa and its secretion ?", o: ["a. IgG", "b. IgA", "c. IgM", "d. IgD"], a: 1 },
-            { q: "what is type of presented immunoglobulin?", o: ["a. IgA", "b. IgM", "c. IgG", "d. IgE"], a: 1, img: "https://i.ibb.co/3ykp3t2/image-cab7f2.png" },
             { q: "Which of the following triggers activation of the extrinsic pathway?", o: ["a. Tissue factor inhibitor", "b. factor 12", "c. tissue factor", "d. contact activation"], a: 2 },
             { q: "A 40 year old man after the initial treatment of a thrombus in the cerebral artery. His doctor wanted to prescribe him a drug to have it in home. What do you think this drug is?", o: ["a Coumarins", "b heparin", "c vitamin k injections", "d vitamin c"], a: 0 },
             { q: "Which of the following lead to increase in erythropoietin ?", o: ["a. Chronic renal disease", "b. chronic respiratory disease", "c. impaired liver function", "d. living at or near sea level"], a: 1 },
@@ -489,7 +496,6 @@
             { q: "What is the final product of HMS?", o: ["a. NAD", "b. NADP", "c. NADPH+H", "d. NADH"], a: 2 }
         ];
         const FOUNDATION_QUESTIONS = [];
-
         BLOOD_QUESTIONS.forEach(q => q.mod = 'blood');
         FOUNDATION_QUESTIONS.forEach(q => q.mod = 'foundation');
         const ALL_DATA = [...BLOOD_QUESTIONS, ...FOUNDATION_QUESTIONS];
@@ -498,16 +504,16 @@
         let currentIdx = 0;
         let progress = JSON.parse(localStorage.getItem('medQuizV8')) || {};
 
-        (function () {
-            const savedTheme = localStorage.getItem('medQuizTheme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
+        (function init() {
+            const theme = localStorage.getItem('medTheme') || 'light';
+            document.body.setAttribute('data-theme', theme);
+            updateDashboard();
         })();
 
         function toggleTheme() {
-            const b = document.body;
-            const newTheme = b.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            b.setAttribute('data-theme', newTheme);
-            localStorage.setItem('medQuizTheme', newTheme);
+            const newTheme = document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('medTheme', newTheme);
         }
 
         function updateDashboard() {
@@ -516,19 +522,29 @@
             document.getElementById('count-wrong').innerText = ALL_DATA.filter(q => progress[q.q] === 'wrong').length;
         }
 
-        function toggleCardMenu(id) {
+        // فتح قائمة الـ Reset
+        function toggleCardMenu(e, id) {
+            e.stopPropagation();
+            const menu = document.getElementById(id);
+            const isVisible = menu.style.display === 'block';
             closeAllMenus();
-            document.getElementById(id).style.display = 'block';
+            if (!isVisible) menu.style.display = 'block';
         }
 
+        // إغلاق كل القوائم
         function closeAllMenus() {
             document.querySelectorAll('.card-menu').forEach(m => m.style.display = 'none');
         }
 
-        function resetProgress(type) {
-            if (!confirm("Are you sure you want to reset this section?")) return;
+        // تنفيذ الـ Reset وإخفاء القائمة فوراً
+        function resetProgress(e, type) {
+            e.stopPropagation(); // منع فتح الكويز عند الضغط على ريست
+            if (!confirm("Are you sure you want to reset progress for this section?")) return;
+
             ALL_DATA.filter(q => q.mod === type).forEach(q => delete progress[q.q]);
             localStorage.setItem('medQuizV8', JSON.stringify(progress));
+
+            closeAllMenus(); // القائمة تختفي هنا فوراً
             updateDashboard();
         }
 
@@ -537,19 +553,22 @@
                 ? ALL_DATA.filter(q => progress[q.q] === 'wrong')
                 : ALL_DATA.filter(q => q.mod === type && progress[q.q] !== 'correct' && progress[q.q] !== 'wrong');
 
-            if (baseQs.length === 0) return alert("No questions found!");
+            if (baseQs.length === 0) return alert("No questions available in this section!");
 
-            let numInput = prompt(`Enter number of questions (Max: ${baseQs.length}):`, baseQs.length);
-            if (numInput === null) return;
-            let num = parseInt(numInput) || baseQs.length;
+            let num = prompt(`Enter number of questions (Max ${baseQs.length}):`, baseQs.length);
+            if (num === null) return;
 
-            sessionQs = baseQs.sort(() => Math.random() - 0.5).slice(0, num);
+            sessionQs = baseQs.sort(() => Math.random() - 0.5).slice(0, parseInt(num) || baseQs.length);
             currentIdx = 0;
 
             document.getElementById('home-page').classList.add('hidden');
-            document.getElementById('quiz-area').style.display = 'flex';
+            document.getElementById('quiz-area').style.display = 'block';
             document.getElementById('home-btn').classList.remove('hidden');
+
+            // تفعيل الـ Sidebar وزره فقط في الكويز
+            document.getElementById('sidebar').style.display = 'flex';
             document.getElementById('menu-trigger').style.display = 'flex';
+
             renderSidebar();
             loadQ();
         }
@@ -559,7 +578,6 @@
             document.getElementById('q-text').innerText = q.q;
             const box = document.getElementById('options-box');
             box.innerHTML = '';
-
             q.o.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'opt'; btn.innerText = opt;
@@ -571,25 +589,21 @@
 
         function handleAnswer(choice, q, btn) {
             const isCorrect = choice === q.a;
-            const allBtns = document.querySelectorAll('.opt');
-            allBtns.forEach(b => b.disabled = true);
-
-            if (isCorrect) {
-                btn.classList.add('correct-opt');
-                progress[q.q] = 'correct';
-            } else {
-                btn.classList.add('wrong-opt');
-                allBtns[q.a].classList.add('correct-opt');
-                progress[q.q] = 'wrong';
-            }
+            document.querySelectorAll('.opt').forEach(b => b.disabled = true);
+            if (isCorrect) { btn.classList.add('correct-opt'); progress[q.q] = 'correct'; }
+            else { btn.classList.add('wrong-opt'); progress[q.q] = 'wrong'; }
             localStorage.setItem('medQuizV8', JSON.stringify(progress));
             updateDots();
             updateDashboard();
+
+            if (currentIdx === sessionQs.length - 1) {
+                setTimeout(() => document.getElementById('success-screen').style.display = 'flex', 800);
+            }
         }
 
         function renderSidebar() {
             const side = document.getElementById('sidebar');
-            side.innerHTML = '<h3 style="width:100%; border-bottom: 2px solid var(--primary); padding-bottom:10px;">Progress</h3>';
+            side.innerHTML = '<h3 style="width:100%; border-bottom: 2px solid var(--primary); padding-bottom: 10px; margin-bottom: 15px;">Questions List</h3>';
             sessionQs.forEach((_, i) => {
                 const d = document.createElement('div');
                 d.className = 'dot'; d.innerText = i + 1; d.id = `dot-${i}`;
@@ -612,8 +626,6 @@
         function next() { if (currentIdx < sessionQs.length - 1) { currentIdx++; loadQ(); } }
         function prev() { if (currentIdx > 0) { currentIdx--; loadQ(); } }
         function goHome() { location.reload(); }
-
-        updateDashboard();
     </script>
 </body>
 
