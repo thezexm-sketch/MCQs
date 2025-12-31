@@ -56,7 +56,6 @@
             }
         }
 
-        /* تعديل أنيميشن الهزة لضمان عدم سقوط السؤال */
         .shake {
             animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
             transform: translate3d(0, 0, 0);
@@ -141,12 +140,17 @@
             cursor: pointer;
             font-weight: bold;
             transition: 0.2s;
+            border: 2px solid transparent;
+            /* لضمان عدم اهتزاز العنصر عند التحديد */
         }
 
+        /* التعديل المطلوب: تمييز السؤال الحالي بمربع أزرق واضح */
         .dot.active {
-            transform: scale(1.15);
-            box-shadow: 0 0 10px var(--primary);
-            border: 2px solid white;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px var(--primary);
+            border: 3px solid #0000FF !important;
+            /* لون أزرق صريح */
+            color: #ffffff;
         }
 
         .dot.correct {
@@ -358,7 +362,7 @@
                 <div id="menu-blood" class="card-menu">
                     <div onclick="resetProgress(event, 'blood')">🔄 Reset Progress</div>
                 </div>
-                <img src="blood1.png" class="card-banner">
+                <img src="blood.png" class="card-banner">
                 <div class="badge" id="count-blood">0</div>
                 <h3>Blood Module</h3>
                 <button class="action-btn" style="width: 100%;">Start Quiz</button>
@@ -369,7 +373,7 @@
                 <div id="menu-found" class="card-menu">
                     <div onclick="resetProgress(event, 'foundation')">🔄 Reset Progress</div>
                 </div>
-                <img src="found2.png" class="card-banner">
+                <img src="found.png" class="card-banner">
                 <div class="badge" id="count-foundation">0</div>
                 <h3>Foundation</h3>
                 <button class="action-btn" style="width: 100%;">Start Quiz</button>
@@ -407,6 +411,7 @@
     </div>
 
     <script>
+        // مصفوفات الأسئلة (فارغة بناءً على طلبك - ضع بياناتك هنا)
         const BLOOD_QUESTIONS = [
             { q: "in anaerobic glycolysis, which of the following do you expect to increase in concentration after addition of fluoride…….?", o: ["a. Glucose", "b. 2-phosphoglycerate", "c. Phosphoenol pyruvate", "d. Pyruvate"], a: 1 },
             { q: "What is the most common plasma protein ?", o: ["a. Albumin", "b. Fibrinogen", "c. Globulin", "d. Prothrombin"], a: 0 },
@@ -553,7 +558,334 @@
             { q: "How is pyruvate converted to Acetyl COA?", o: ["a. Oxidation", "b. Carbohylation", "c. Phosphorylation", "d. Oxidative decarboxylation"], a: 3 },
             { q: "What is the final product of HMS?", o: ["a. NAD", "b. NADP", "c. NADPH+H", "d. NADH"], a: 2 }
         ];
-        const FOUNDATION_QUESTIONS = [];
+        const FOUNDATION_QUESTIONS = [
+            { q: "What does a low value of Km indicate?", o: ["a) High enzyme activity", "b) Low affinity of the enzyme to the substrate", "c) High substrate affinity to enzyme", "d) No effect on reaction"], a: 2 },
+            { q: "A 30-year-old male presents with Infertility due to immotile sperms. Genetic testing reveals a mutation in the motor proteins of microtubules. The structure of which of the following is likely affected in his sperms?", o: ["a) Microvilli", "b) Flagella", "c) Stereocilia", "d) Basal infoldings"], a: 1 },
+            { q: "What is the classification of the patella according to its shape?", o: ["A) Sesamoid", "B) Flat", "C) Irregular", "D) Short tubular"], a: 0 },
+            { q: "What is the main function of the structure shown (Glutamate, Cysteine, Glycine)?", o: ["a) Buffering", "b) Reducing agent", "c) Precursor of CoA", "d) Structural protein"], a: 1 },
+            { q: "Which acidic heteropolysaccharide is major in cartilage?", o: ["a) Hyaluronic acid", "b) Chondroitin sulfate", "c) Dermatan sulfate", "d) Keratan sulfate"], a: 1 },
+            { q: "Which carbohydrate can help relieve constipation?", o: ["a) Homopolysaccharide structural CHO in plants (cellulose)", "b) Homopolysaccharide storage CHO in plants (starch)", "c) Homopolysaccharide storage CHO in animals (glycogen)", "d) Homopolysaccharide structural CHO in animals (chitin)"], a: 0 },
+            { q: "Which of the following is a prostaglandin precursor?", o: ["a) Linoleic acid", "b) Oleic acid", "c) arachdic acid", "d) Arachidonic acid"], a: 3 },
+            { q: "Which of the following is a non-protein neurotransmitter?", o: ["a) GABA", "b) beta-alanine", "c) Glutamate", "d) Glycine"], a: 0 },
+            { q: "Which of the following is a character of apoptosis?", o: ["A) cell swelling", "B) cell rupture", "C) breakdown of organelles", "D) Hypercondensation of chromatin"], a: 3 },
+            { q: "In non-competitive inhibition:", o: ["A) Constant Km", "B) Constant Vmax", "C) Increase Vmax", "D) Decrease Km"], a: 0 },
+            { q: "Which structure in the cranial region connects the ectoderm and endoderm?", o: ["A) Buccopharyngeal membrane", "B) Cloacal membrane", "C) Cardiogenic area", "D) Septum transversum"], a: 0 },
+            { q: "Which is a component of ground substance?", o: ["A) Adhesive glycoproteins", "B) Collagen fibers", "C) Elastic fibers", "D) Fibroblast"], a: 0 },
+            { q: "Which of the following is a histological feature of macrophages?", o: ["A) Give deep basophilic cytoplasm", "B) Their granules give metachromasia", "C) They are derived from blood monocytes", "D) They are resting fibroblasts"], a: 2 },
+            { q: "Which codon terminates translation?", o: ["A) AUG, UAA, UAG", "B) UAA, UAG, UGA", "C) AAA, GGG, CCC", "D) UAC, UAU, UAG"], a: 1 },
+            { q: "Which plane divides the body into anterior and posterior parts?", o: ["A) Coronal", "B) Sagittal", "C) Transverse", "D) Oblique"], a: 0 },
+            { q: "Which placental abnormality has the umbilical cord attached at the margin?", o: ["A) Battledore placenta", "B) Velamentous placenta", "C) Central placenta", "D) Marginalis placenta"], a: 0 },
+            { q: "Placenta previa that covers the internal os is called:", o: ["A) Centralis", "B) Marginalis", "C) Lateral", "D) Partial"], a: 0 },
+            { q: "Which is true about the histological appearance of tendons?", o: ["A) Tendon cells are found between elastic fibers", "B) Appears eosinophilic using H&E", "C) Highly vascular", "D) Random collagen fiber orientation"], a: 1 },
+            { q: "Homeostasis is mainly regulated in which compartment?", o: ["A) Extracellular fluid", "B) Intracellular fluid", "C) Transcellular fluid", "D) Lymphatic fluid"], a: 0 },
+            { q: "A 55-year-old woman is diagnosed with a breast mass. A biopsy is sent to pathology. Which cytoskeletal component helps identify the type of malignancy?", o: ["A) Actin filaments", "B) Intermediate filaments", "C) Alpha and beta tubulin", "D) Microfilaments"], a: 1 },
+            { q: "Which sugar derivative has detoxification functions?", o: ["A) Sorbitol", "B) Mannitol", "C) Glucuronic acid", "D) Glucosamine"], a: 2 },
+            { q: "A surgeon performing a splenectomy wants to ligate the arterial blood supply. Which ligament is incised?", o: ["A) Lienorenal ligament", "B) Gastrosplenic ligament", "C) Phrenicocolic ligament", "D) Hepatogastric ligament"], a: 0 },
+            { q: "Loss of which component causes respiratory distress syndrome?", o: ["A) Phosphatidylserine", "B) Phosphatidylinositol", "C) Phosphatidylcholine (surfactant)", "D) Phosphatidylethanolamine"], a: 2 },
+            { q: "After 30 hours from IVF fertilization, the zygote divides into two cells. What is this process called?", o: ["A) Gastrulation", "B) Implantation", "C) Cleavage", "D) Fertilization"], a: 2 },
+            { q: "Myoepithelial cells are found in which glands?", o: ["a) Sebaceous", "b) Mammary gland", "c) Pancreas", "d) Thyroid gland"], a: 1 },
+            { q: "Which type of cell contains mitochondria with tubular cristae?", o: ["a) Steroid-secreting cells", "b) Protein-secreting cells", "c) Red blood cells"], a: 0 },
+            { q: "Patient complaining about high cholesterol level; doctor suggested olive oil rich in which of the following fatty acids?", o: ["a) Arachidonic essential fatty acid", "b) Monounsaturated non-essential fatty acid", "c) Polyunsaturated non-essential fatty acid", "d) Trans non-essential fatty acid"], a: 1 },
+            { q: "Which of the following best describes lysosomes under electron microscopy (EM)?", o: ["a) Homogeneous dense granules", "b) Membrane-bound with mixed electron-dense and electron-lucent regions", "c) Clear vesicles without enzymes that originate from ER", "d) Tubular structures spread in cytoplasm"], a: 1 },
+            { q: "Which of the following is true about stratum spinosum?", o: ["A) has numerous desmosomes", "B) has few hemidesmosomes", "C) has a layer of melanocytes", "D) contains merkels cells"], a: 0 },
+            { q: "What type of joint is the shoulder joint?", o: ["a) Hinge joint", "b) Ball and socket joint", "c) Peg and socket joint", "d) Saddle joint"], a: 1 },
+            { q: "From which embryonic germ layer is the epithelium lining the gastrointestinal (GI) tract derived?", o: ["a) Ectoderm", "b) Mesoderm", "c) Endoderm", "d) Neural crest"], a: 2 },
+            { q: "What is the function of the protein in the Fluid Mosaic Model (Cell receptor)?", o: ["A) Trilaminar structure", "B) Cell receptor", "C) Protein pump", "D) Semi-permeability"], a: 1 },
+            { q: "Which enzyme seals the nicks between phosphodiester bonds in DNA?", o: ["a) DNA polymerase", "b) DNA ligase", "c) DNA helicase B", "d) DNA topoisomerase"], a: 1 },
+            { q: "Which adrenergic receptor increases the air entering the bronchioles?", o: ["A) Alpha 1", "B) Beta 2", "C) Alpha 2", "D) Beta 1"], a: 1 },
+            { q: "The autonomic preganglionic fiber stimulates which receptor?", o: ["A) Muscarinic on target cells", "B) Nicotinic on postganglionic neurone", "C) Adrenergic on effector cells", "D) Dopamine on spinal cord"], a: 1 },
+            { q: "What structure connects the midgut to the yolk sac during embryonic development?", o: ["a) Allantois", "b) Vitellointestinal duct", "c) Urachus", "d) Notochord"], a: 1 },
+            { q: "What is the appropriate initial fluid therapy for a patient with diarrhea-induced dehydration?", o: ["a) 10% mannitol", "b) 0.9% saline", "c) 25% glucose", "d) 10% KCI"], a: 1 },
+            { q: "Which derivative monosaccharide, a sugar alcohol, is used in the management of hypertension?", o: ["a) Mannitol sugar acid", "b) Mannitol sugar alcohol", "c) Glucuronic sugar alcohol", "d) Glucuronic sugar acid"], a: 1 },
+            { q: "What is the characteristic feature of the 5' cap of mRNA?", o: ["a) Polyadenylated tail", "b) Modified guanosine", "c) Intronic sequences", "d) Inhibits the binding to ribosomal binding site"], a: 1 },
+            { q: "A patient attempted suicide using an insecticide (cholinesterase inhibitor). Which effect is expected?", o: ["a) Urine retention, dry skin, mydriasis", "b) Sweating, pupil constriction, and bronchoconstriction", "c) Dry skin, bradycardia, and bronchoconstriction", "d) Pupil constriction, tachycardia"], a: 1 },
+            { q: "Which of the following pass by facilitated diffusion through the cell membrane?", o: ["A) Oxygen", "B) CO2", "C) Glucose", "D) Water"], a: 2 },
+            { q: "What is the embryonic origin of the notochord?", o: ["a) hypoblast", "b) Mesoderm", "c) Epiblast", "d) Neural crest"], a: 2 },
+            { q: "Blockade of post ganglionic sympathetic nerve fibers leads to:", o: ["A) Decreased sweating", "B) Bronchoconstriction", "C) Pupil constriction", "D) Contraction of ciliary muscle"], a: 0 },
+            { q: "Denaturation affects the following levels of protein structure except:", o: ["A) Primary", "B) Secondary", "C) Tertiary", "D) Quaternary"], a: 0 },
+            { q: "Lactase enzyme exhibits which type of specificity?", o: ["A) Absolute specificity", "B) Relative specificity", "C) Group specificity", "D) Optical specificity"], a: 0 },
+            { q: "Which type of mutation does not change the amino acid sequence of a protein?", o: ["A) Missense", "B) Nonsense", "C) Frameshift", "D) Silent"], a: 3 },
+            { q: "What is the main function of RNA splicing?", o: ["A) Formation of proteins from mRNA", "B) Create protein diversity from the same gene", "C) Degradation of faulty mRNA", "D) Initiation of transcription"], a: 1 },
+            { q: "Which of the following is true regarding thick and thin skin?", o: ["A) Thin skin doesn't have hair follicles", "B) Thick skin has 4 layers", "C) Thin skin covers the sole and palm", "D) Thick skin has numerous sweat glands"], a: 3 },
+            { q: "Which type of epithelium is distensible and can change shape?", o: ["A) Transitional epithelium", "B) Neuroepithelium", "C) Squamous epithelium", "D) Columnar epithelium"], a: 0 },
+            { q: "As a result of tail folding during embryonic development, which structure becomes ventral?", o: ["A) Allantois becomes ventral", "B) Cloacal membrane becomes ventral", "C) Septum transversum becomes ventral", "D) Oral membrane becomes ventral"], a: 0 },
+            { q: "What is the primary function of polysomes (polyribosomes)?", o: ["a) Synthesizing cytosolic proteins", "b) Synthesizing secretory proteins", "c) Synthesizing membrane-bound proteins", "d) Synthesizing proteins for lysosomes"], a: 0 },
+            { q: "Which of the following best characterizes the G1 phase of the cell cycle?", o: ["a) DNA replication occurs", "b) active RNA and protein synthesis", "c) Chromosome segregation occurs", "d) Cell is in a quiescent state"], a: 1 },
+            { q: "Insulin binds to which of the following types of receptors?", o: ["a) Intrinsic (intrinsic tyrosine kinase) receptor", "b) steriod hormone receptor", "c) G-protein-coupled receptor", "d) ligand gate receptor"], a: 0 },
+            { q: "Regarding the structure made of connexon proteins (Gap Junction), which is correct?", o: ["a) Made of connexon proteins", "b) Made of selectin proteins", "c) Present in skeletal muscles", "D) the protein is cadheren"], a: 0 },
+            { q: "The complex formed by a segment of DNA wrapped twice around 8 histone proteins is called:", o: ["a) Nucleosome", "b) Nucleoside", "c) Nucleotide", "d) Chromatosome"], a: 0 },
+            { q: "Which of the following cell types primarily performs constitutive secretion?", o: ["a) Pancreatic acinar cells", "b) macrophages", "c) Plasma cells", "d) Mast cells"], a: 2 },
+            { q: "When the hand reflexively withdraws from a hot object, what is the primary motor center?", o: ["a) Anterior horn cells (AHC)", "b) lateral horn cells (LHC)", "c) Dorsal horn cell (DHC)", "d) Hypothalamus"], a: 0 },
+            { q: "Which adrenergic receptor mediates bronchodilation?", o: ["a) alpha 1 receptors", "b) alpha 2 receptors", "c) beta 2 receptors", "d) beta 1 receptors"], a: 2 },
+            { q: "What's the coding part of mRNA?", o: ["a) Exons", "b) Introns", "c) Poly-A tail", "D) promoter region"], a: 0 },
+            { q: "Which physiological parameter is primarily maintained by sympathetic tone?", o: ["a) Basal Heart rate", "b) Arterial blood pressure", "c) Basal intestinal movement", "d) Body temperature"], a: 1 },
+            { q: "Which of the following describes the structure of keratan sulfate?", o: ["a) It is a branched structure", "b) It is a neutral heteropolysaccharide", "c) It contains galactose", "d) It contains glucuronic acid"], a: 2 },
+            { q: "What structure is required for a somatic reflex action in response to a burn to occur?", o: ["a) Brainstem", "b) Spinal cord", "c) Cerebellum", "d) Thalamus"], a: 1 },
+            { q: "Where are parasympathetic ganglia located?", o: ["a) In a chain parallel to the spinal cord", "b) In the brain", "c) In the dorsal roots of spinal nerves", "d) Close to or embedded in the organs innervated"], a: 3 },
+            { q: "Which of the following is true about brown adipose tissue?", o: ["a) It has a peripheral nucleus", "b) It contains large single fat droplets", "c) It is more common in adults than in infants", "d) Its primary function is heat production"], a: 3 },
+            { q: "Regarding the shoulder joint, which of the following is correct?", o: ["a) It is a hinge joint", "b) It is a primary cartilaginous joint", "c) It is a synovial ball and socket joint", "d) It allows only flexion and extension"], a: 2 },
+            { q: "A patient was given an injection in his arm, what is the type of the muscle in this region?", o: ["a) Smooth muscle", "b) Skeletal muscle", "c) Cardiac muscle", "d) Myoepithelial muscle"], a: 1 },
+            { q: "A 45-year-old female presents with pain in her knee. Imaging shows degradation of the articular cartilage. What type of cartilage is found here?", o: ["a) Elastic cartilage", "b) Fibrocartilage", "c) Hyaline cartilage", "d) Calcified cartilage"], a: 2 },
+            { q: "What is the function of structure (A) shown in the organelle (Mitochondria)?", o: ["a) ATP synthesis", "b) Protein synthesis", "c) Lipid synthesis", "d) DNA replication"], a: 0 },
+            { q: "Which enzyme is used in DNA replication to unwind the double helix?", o: ["a) DNA Polymerase", "b) Helicase", "c) Ligase", "d) Primase"], a: 1 },
+            { q: "A child has bowed legs and poor bone mineralization. Which of the following is likely deficient?", o: ["a) Vitamin A", "b) Vitamin C", "c) Vitamin D", "d) Vitamin K"], a: 2 },
+            { q: "Which of the following is a character of non-competitive inhibition?", o: ["a) Vmax is decreased", "b) Km is increased", "c) It can be overcome by increasing substrate", "d) Inhibitor binds to the active site"], a: 0 },
+            { q: "The structure (Glutathione) consists of which three amino acids?", o: ["a) Glutamate, Cysteine, Glycine", "b) Glutamine, Serine, Alanine", "c) Aspartate, Cysteine, Valine", "d) Lysine, Arginine, Histidine"], a: 0 },
+            { q: "Which of the following is an example of a saturated fatty acid?", o: ["a) Oleic acid", "b) Palmitic acid", "c) Linoleic acid", "d) Arachidonic acid"], a: 1 },
+            { q: "Which organelle is responsible for the detoxification of drugs in the liver?", o: ["a) Rough ER", "b) Smooth ER", "c) Golgi apparatus", "d) Lysosomes"], a: 1 },
+            { q: "What is the term for the movement of a limb away from the midline of the body?", o: ["a) Adduction", "b) Abduction", "c) Flexion", "d) Extension"], a: 1 },
+            { q: "Which of the following describes the G2 phase of the cell cycle?", o: ["a) DNA replication", "b) Final preparations for mitosis", "c) Initial cell growth", "d) Cytokinesis"], a: 1 },
+            { q: "What is the fate of the paraxial mesoderm?", o: ["a) Heart", "b) Kidneys", "c) Somites", "d) Lining of gut"], a: 2 },
+            { q: "Which of the following is true about mRNA processing?", o: ["a) Introns are joined together", "b) By cutting and adding a polymer of adenine nucleotides (Poly-A tail)", "c) Occurs in the cytoplasm", "d) Does not include capping"], a: 1 },
+            { q: "Which base in structure A (Lecithin) would be deficient in a baby with respiratory distress?", o: ["a) Ethanolamine", "b) Choline", "c) Serine", "d) Inositol"], a: 1 },
+            { q: "Which of the following structures is related to the border (A) of the organelle (Golgi)?", o: ["a) Secretory vesicles", "b) Nuclear envelope", "c) Lysosomes", "d) Mitochondria"], a: 1 },
+            { q: "What is the amino acid that acts as a precursor for Melanin?", o: ["a) Tryptophan", "b) Tyrosine", "c) Histidine", "d) Phenylalanine"], a: 1 },
+            { q: "Which type of epithelium lines the urinary bladder?", o: ["a) Simple squamous", "b) Transitional", "c) Pseudostratified columnar", "d) Stratified squamous"], a: 1 },
+            { q: "What happens during the third week of development?", o: ["a) Implantation", "b) Gastrulation", "c) Cleavage", "d) Neurulation"], a: 1 },
+            { q: "Which plane divides the body into equal right and left halves?", o: ["a) Parasagittal", "b) Midsagittal", "c) Coronal", "d) Transverse"], a: 1 },
+            { q: "A 60-year-old male has high blood pressure. Which autonomic division is likely overactive?", o: ["a) Sympathetic", "b) Parasympathetic", "c) Somatic", "d) Enteric"], a: 0 },
+            { q: "Which of the following is a característica of simple diffusion?", o: ["a) Requires energy", "b) Occurs against a concentration gradient", "c) Does not require a carrier protein", "d) Moves large polar molecules"], a: 2 },
+            { q: "What is the function of the nucleolus?", o: ["a) DNA replication", "b) Ribosome subunit assembly", "c) Protein folding", "d) ATP production"], a: 1 },
+            { q: "Which bond stabilizes the alpha-helix in proteins?", o: ["a) Peptide bond", "b) Hydrogen bond", "c) Disulfide bond", "d) Ionic bond"], a: 1 },
+            { q: "Which of the following is a ketone body?", o: ["a) Acetone", "b) Glucose", "c) Cholesterol", "d) Glycerol"], a: 0 },
+            { q: "The secondary structure of DNA is a double helix held by:", o: ["a) Phosphodiester bonds", "b) Hydrogen bonds between bases", "c) Glycosidic bonds", "d) Peptide bonds"], a: 1 },
+            { q: "Which of the following describes the 'Fluid Mosaic Model' of the cell membrane?", o: ["a) A solid layer of proteins", "b) A bilayer of phospholipids with mobile proteins", "c) A fixed structure of carbohydrates", "d) A single layer of lipids"], a: 1 },
+            { q: "Which hormone uses a G-protein coupled receptor?", o: ["a) Estrogen", "b) Epinephrine", "c) Thyroid hormone", "d) Cortisol"], a: 1 },
+            { q: "What is the role of tRNA during translation?", o: ["a) Carrying the genetic code from nucleus", "b) Bringing amino acids to the ribosome", "c) Forming the structure of the ribosome", "d) Splicing the mRNA"], a: 1 },
+            { q: "A patient with scurvy has a defect in collagen synthesis. Which vitamin is missing?", o: ["a) Vitamin A", "b) Vitamin B12", "c) Vitamin C", "d) Vitamin E"], a: 2 },
+            { q: "Which connective tissue cell is responsible for producing antibodies?", o: ["a) Fibroblast", "b) Macrophage", "c) Plasma cell", "d) Mast cell"], a: 2 },
+            { q: "Which of the following is a derivative of the ectoderm?", o: ["a) Skeleton", "b) Muscles", "c) Nervous system", "d) Circulatory system"], a: 2 },
+            { q: "What is the function of the enzyme 'Catalase'?", o: ["a) Breaks down hydrogen peroxide", "b) Synthesizes DNA", "c) Digests proteins", "d) Transports oxygen"], a: 0 },
+            { q: "Which receptor is responsible for sensing light in the eye?", o: ["a) Chemoreceptor", "b) Photoreceptor", "c) Mechanoreceptor", "d) Thermoreceptor"], a: 1 },
+            { q: "The 'All-or-None' law applies to:", o: ["a) Nerve impulses", "b) Graded potentials", "c) Enzyme reactions", "d) Passive transport"], a: 0 },
+            { q: "Which enzyme is responsible for 'transcription'?", o: ["a) DNA Polymerase", "b) RNA Polymerase", "c) Reverse Transcriptase", "d) Helicase"], a: 1 },
+            { q: "Which of the following is a synovial plane joint?", o: ["a. Wrist", "b. Elbow", "c. Shoulder", "d. Intercarpal"], a: 3 },
+            { q: "Which of the following has a growing upper end?", o: ["a. Femur", "b. Humerus", "c. Radius", "d. Ulna"], a: 1 },
+            { q: "Which of the following is drained by thoracic duct?", o: ["a. Right lower limb", "b. Right upper limb", "c. Right side of chest", "d. Right side of neck"], a: 0 },
+            { q: "The fatty acid connective tissue that just under the skin?", o: ["a. Epidermis", "b. Dermis", "c. Deep fascia", "d. Superficial fascia"], a: 3 },
+            { q: "Which of the following is an example of an elastic artery?", o: ["a. Aorta", "b. Radial artery", "c. Ulnar artery", "d. Facial artery"], a: 0 },
+            { q: "The basic unit of the nervous system is:", o: ["a. Nephron", "b. Neuron", "c. Osteon", "d. Sarcomere"], a: 1 },
+            { q: "Inulin is an example of.....", o: ["a. Glucosans", "b. Fructosans", "c. Galactosans", "d. Mannosans"], a: 1 },
+            { q: "Which of the following mutation causes severe sensitivity to sunlight?", o: ["a. Mismatched bases", "b. Double strand break", "c. pyrimidine dimer", "d. Cytosine deamination to uracil"], a: 2 },
+            { q: "A 26-year-old female is diagnosed with myasthenia gravis (reduction in nicotinic receptors). Which statement describes this type of receptor?", o: ["a. They are intracellular receptors", "b. They are G-protein coupled receptors", "c. They are ligand-gated ion channels", "d. They are catalytic receptors"], a: 2 },
+            { q: "Which of the following is an example of a ketogenic amino acid?", o: ["a. Alanine", "b. Leucine", "c. Valine", "d. Glycine"], a: 1 },
+            { q: "Which enzyme is responsible for the initiation of transcription in eukaryotes?", o: ["a. DNA polymerase I", "b. RNA polymerase II", "c. DNA ligase", "d. Primase"], a: 1 },
+            { q: "A low Km value for an enzyme means:", o: ["a. Low affinity for substrate", "b. High affinity for substrate", "c. The reaction rate is independent of substrate", "d. Enzyme is inhibited"], a: 1 },
+            { q: "Which of the following is a component of DNA but not RNA?", o: ["a. Adenine", "b. Guanine", "c. Thymine", "d. Uracil"], a: 2 },
+            { q: "Which of the following cells is responsible for the production of collagen fibers?", o: ["a. Macrophage", "b. Fibroblast", "c. Mast cell", "d. Plasma cell"], a: 1 },
+            { q: "The lining epithelium of the trachea is:", o: ["a. Simple squamous", "b. Stratified squamous", "c. Pseudostratified ciliated columnar with goblet cells", "d. Transitional"], a: 2 },
+            { q: "Which organelle is known as the 'powerhouse' of the cell?", o: ["a. Lysosome", "b. Mitochondria", "c. Golgi complex", "d. Smooth ER"], a: 1 },
+            { q: "Which of the following is a characteristic of skeletal muscle cells?", o: ["a. Spindle-shaped", "b. Unbranched and multinucleated", "c. Involuntary", "d. Found in walls of hollow organs"], a: 1 },
+            { q: "Which cell type is responsible for the secretion of antibodies?", o: ["a. T-lymphocyte", "b. B-lymphocyte (Plasma cell)", "c. Neutrophil", "d. Eosinophil"], a: 1 },
+            { q: "The primary neurotransmitter released at the neuromuscular junction is:", o: ["a. Dopamine", "b. Norepinephrine", "c. Acetylcholine", "d. Serotonin"], a: 2 },
+            { q: "Homeostasis refers to:", o: ["a. The breakdown of nutrients", "b. Maintenance of a stable internal environment", "c. The process of cell division", "d. Change in body temperature with environment"], a: 1 },
+            { q: "Which of the following increases the heart rate?", o: ["a. Parasympathetic stimulation", "b. Sympathetic stimulation", "c. Vagus nerve activity", "d. Acetylcholine"], a: 1 },
+            { q: "The resting membrane potential is mainly determined by:", o: ["a. Na+ influx", "b. K+ efflux", "c. Cl- influx", "d. Ca2+ influx"], a: 1 },
+            { q: "Which receptor type is involved in the 'fight or flight' response in the heart?", o: ["a. Alpha-1", "b. Beta-1", "c. Muscarinic M2", "d. Nicotinic"], a: 1 },
+            { q: "Fertilization normally occurs in which part of the uterine tube?", o: ["a. Isthmus", "b. Ampulla", "c. Infundibulum", "d. Intramural part"], a: 1 },
+            { q: "The process by which the three germ layers are formed is called:", o: ["a. Cleavage", "b. Gastrulation", "c. Implantation", "d. Neurulation"], a: 1 },
+            { q: "The nervous system is derived from which embryonic layer?", o: ["a. Ectoderm", "b. Mesoderm", "c. Endoderm", "d. Trophoblast"], a: 0 },
+            { q: "The umbilical cord contains:", o: ["a. One artery and one vein", "b. Two arteries and one vein", "c. One artery and two veins", "d. Two arteries and two veins"], a: 1 },
+            { q: "A cascade mechanism is ended, stopped, or inhibited by which of the following mechanisms?", o: ["A. Removal of the stimulus", "B. Another positive feedback mechanism", "C. Spontaneously without any mechanism", "D. A negative feedback mechanism"], a: 3 },
+            { q: "What are the three main components of a reflex arc?", o: ["A. Receptor, afferent, center", "B. Afferent, center, efferent", "C. Center, efferent, effector", "D. Receptor, center, effector"], a: 3 },
+            { q: "What is the fastest reflex mechanism in the body?", o: ["A. Nervous reflex", "B. Hormonal reflex", "C. Both A & B", "D. None of the above"], a: 0 },
+            { q: "Which of the following ions has the highest concentration in the extracellular fluid (ECF)?", o: ["A. Potassium", "B. Sodium", "C. Magnesium", "D. Phosphate"], a: 1 },
+            { q: "Which of the following ions has the highest concentration in the intracellular fluid (ICF)?", o: ["A. Sodium", "B. Calcium", "C. Potassium", "D. Chloride"], a: 2 },
+            { q: "The cell membrane is primarily composed of:", o: ["A. Phospholipids and proteins", "B. Carbohydrates and nucleic acids", "C. Triglycerides and vitamins", "D. Pure cholesterol"], a: 0 },
+            { q: "Which part of the phospholipid molecule is 'hydrophilic' (water-loving)?", o: ["A. The fatty acid tails", "B. The phosphate head", "C. The cholesterol core", "D. The integral protein"], a: 1 },
+            { q: "What is the primary function of cholesterol in the cell membrane?", o: ["A. Energy storage", "B. Fluidity and stability", "C. Protein synthesis", "D. DNA replication"], a: 1 },
+            { q: "Which type of membrane protein spans the entire lipid bilayer?", o: ["A. Peripheral protein", "B. Integral protein", "C. Glycocalyx", "D. Lipid-bound protein"], a: 1 },
+            { q: "Movement of water across a semi-permeable membrane is called:", o: ["A. Diffusion", "B. Active transport", "C. Osmosis", "D. Facilitated diffusion"], a: 2 },
+            { q: "Simple diffusion occurs through the cell membrane for:", o: ["A. Large polar molecules", "B. Lipid-soluble substances", "C. Ions against their gradient", "D. Glucose"], a: 1 },
+            { q: "Facilitated diffusion requires which of the following?", o: ["A. ATP energy", "B. Carrier protein", "C. Moving against concentration gradient", "D. Endocytosis"], a: 1 },
+            { q: "The Na+/K+ pump is an example of:", o: ["A. Primary active transport", "B. Secondary active transport", "C. Facilitated diffusion", "D. Simple diffusion"], a: 0 },
+            { q: "Secondary active transport (Co-transport) of glucose with sodium depends on:", o: ["A. Direct use of ATP", "B. The sodium gradient created by the Na+/K+ pump", "C. Thermal energy", "D. Pressure gradient"], a: 1 },
+            { q: "In 'Counter-transport' (Antiport), the two substances move in:", o: ["A. The same direction", "B. Opposite directions", "C. No movement occurs", "D. Into the nucleus only"], a: 1 },
+            { q: "Phagocytosis is often referred to as:", o: ["A. Cell drinking", "B. Cell eating", "C. Cell breathing", "D. Exocytosis"], a: 1 },
+            { q: "Pinocytosis is often referred to as:", o: ["A. Cell eating", "B. Cell drinking", "C. Passive transport", "D. Osmosis"], a: 1 },
+            { q: "Homeostasis is the maintenance of nearly constant conditions in the:", o: ["A. Internal environment (ECF)", "B. External environment", "C. Nucleus only", "D. Intracellular fluid only"], a: 0 },
+            { q: "The most common control system in the body is:", o: ["A. Positive feedback", "B. Negative feedback", "C. Neutral feedback", "D. Feed-forward only"], a: 1 },
+            { q: "Which of the following is an example of 'Normal' Positive Feedback?", o: ["A. Regulation of blood pressure", "B. Blood clotting", "C. Body temperature control", "D. Blood glucose regulation"], a: 1 },
+            { q: "During childbirth, the release of oxytocin to increase uterine contractions is a:", o: ["A. Negative feedback", "B. Positive feedback", "C. Homeostatic failure", "D. Passive process"], a: 1 },
+            { q: "Total Body Water (TBW) in a 70kg adult male is approximately:", o: ["A. 20 Liters", "B. 42 Liters", "C. 60 Liters", "D. 10 Liters"], a: 1 },
+            { q: "The Intracellular Fluid (ICF) makes up approximately how much of the total body water?", o: ["A. 1/3", "B. 2/3", "C. 1/4", "D. 9/10"], a: 1 },
+            { q: "The Extracellular Fluid (ECF) is composed of:", o: ["A. Interstitial fluid and Plasma", "B. Cytoplasm and Nucleoplasm", "C. Only blood cells", "D. Pure water"], a: 0 },
+            { q: "Which of the following is considered 'Transcellular fluid'?", o: ["A. Blood plasma", "B. Cerebrospinal fluid (CSF)", "C. Cytoplasm", "D. Lymph"], a: 1 },
+            { q: "What is the primary cation in the ECF?", o: ["A. Potassium (K+)", "B. Sodium (Na+)", "C. Calcium (Ca2+)", "D. Magnesium (Mg2+)"], a: 1 },
+            { q: "What is the primary cation in the ICF?", o: ["A. Sodium (Na+)", "B. Potassium (K+)", "C. Chloride (Cl-)", "D. Bicarbonate (HCO3-)"], a: 1 },
+            { q: "Osmotic pressure is determined by:", o: ["A. The size of the particles", "B. The mass of the particles", "C. The number of particles", "D. The color of the solution"], a: 2 },
+            { q: "A solution with the same osmotic pressure as plasma is called:", o: ["A. Hypotonic", "B. Hypertonic", "C. Isotonic", "D. Isoelectric"], a: 2 },
+            { q: "If a cell is placed in a 'Hypertonic' solution, the cell will:", o: ["A. Swell", "B. Shrink", "C. Stay the same", "D. Explode"], a: 1 },
+            { q: "If a cell is placed in a 'Hypotonic' solution, the cell will:", o: ["A. Shrink", "B. Swell", "C. Stay the same", "D. Turn red"], a: 1 },
+            { q: "The selectively permeable membrane is most permeable to:", o: ["A. Proteins", "B. Water", "C. Large anions", "D. Glucose"], a: 1 },
+            { q: "The 'Fluid Mosaic Model' was proposed by:", o: ["A. Watson and Crick", "B. Singer and Nicolson", "C. Robert Hooke", "D. Louis Pasteur"], a: 1 },
+            { q: "The Carbohydrate coat on the outer surface of the cell membrane is the:", o: ["A. Glycocalyx", "B. Cytoskeleton", "C. Lipid raft", "D. Nucleolus"], a: 0 },
+            { q: "G-proteins act as:", o: ["A. Structural fibers", "B. Signal transducers", "C. Enzymes in lysosomes", "D. Oxygen carriers"], a: 1 },
+            { q: "Which transport process requires ATP directly?", o: ["A. Simple diffusion", "B. Facilitated diffusion", "C. Primary active transport", "D. Osmosis"], a: 2 },
+            { q: "The Na+/K+ pump moves:", o: ["A. 3 Na+ out, 2 K+ in", "B. 2 Na+ out, 3 K+ in", "C. 3 Na+ in, 2 K+ out", "D. 1 Na+ out, 1 K+ in"], a: 0 },
+            { q: "Vesicular transport is needed for:", o: ["A. Small ions", "B. Water molecules", "C. Large molecules/particles", "D. Oxygen"], a: 2 },
+            { q: "Exocytosis is the process of:", o: ["A. Bringing substances into the cell", "B. Releasing substances out of the cell", "C. Moving substances between organelles", "D. Dividing the cell"], a: 1 },
+            { q: "Voltage-gated channels open in response to:", o: ["A. Binding of a chemical", "B. Mechanical pressure", "C. Changes in membrane potential", "D. Temperature changes"], a: 2 },
+            { q: "Ligand-gated channels open in response to:", o: ["A. Electrical signals", "B. Chemical messengers (Ligands)", "C. Light", "D. Cell stretching"], a: 1 },
+            { q: "Which of the following is a function of the cell membrane?", o: ["A. Protection", "B. Communication", "C. Selective permeability", "D. All of the above"], a: 3 },
+            { q: "The core of the cell membrane is:", o: ["A. Hydrophilic", "B. Hydrophobic", "C. Pure protein", "D. Empty space"], a: 1 },
+            { q: "Active transport moves substances:", o: ["A. Down their concentration gradient", "B. Against their concentration gradient", "C. Only for water", "D. Without using energy"], a: 1 },
+            { q: "The gain of a control system is a measure of its:", o: ["A. Size", "B. Effectiveness", "C. Speed", "D. Failure"], a: 1 },
+            { q: "All the following Monosaccharides have asymmetric carbon atom except:", o: ["a. Glucose", "b. Glyceraldehyde", "c. Fructose", "d. Dihydroxyacetone (keto triose)", "e. None of the above"], a: 3 },
+            { q: "Glucose and galactose are:", o: ["a. Anomers", "b. Constituents of sucrose", "c. D&L isomers", "d. Epimers"], a: 3 },
+            { q: "D-glucose and D-mannose are Epimers with respect to carbon atom number:", o: ["a. 3", "b. 2", "c. 4", "d. 5", "e. 1"], a: 1 },
+            { q: "D-glucuronic acid is an example of:", o: ["a. Aldonic acid", "b. Aldaric acid", "c. Uronic acid", "d. Saccharic acid", "e. None of the above"], a: 2 },
+            { q: "Reduction of Monosaccharides yields:", o: ["a. Sugar alcohols", "b. Sugar acids", "c. amino sugars", "d. Deoxy-sugar", "e. None of the above"], a: 0 },
+            { q: "Hydrogen gas in presence of a metal can reduce fructose to:", o: ["a. Mannitol", "b. Ribitol", "c. Glycerol", "d. Glucose", "e. None of the above"], a: 0 },
+            { q: "Ascorbic acid is an example of:", o: ["a. Sugar acid", "b. Sugar alcohol", "c. Sugar phosphate", "d. Deoxy-sugar", "e. Amino sugar"], a: 0 },
+            { q: "All the following are reducing sugars except:", o: ["a. Maltose", "b. Lactose", "c. Sucrose", "d. None of the above"], a: 2 },
+            { q: "A disaccharide formed of two glucose units is:", o: ["a. Lactose", "b. Maltose", "c. Sucrose", "d. Amylose", "e. Amylopectin"], a: 1 },
+            { q: "Milk sugar is:", o: ["a. Sucrose", "b. Maltose", "c. Cellobiose", "d. Lactose", "e. None of the above"], a: 3 },
+            { q: "Cane sugar is:", o: ["a. Maltose", "b. Cellobiose", "c. Lactose", "d. Sucrose", "e. None of the above"], a: 3 },
+            { q: "Malt sugar is:", o: ["a. Lactose", "b. Maltose", "c. Sucrose", "d. Cellobiose", "e. None of the above"], a: 1 },
+            { q: "Starch is an example of:", o: ["a. Galactosans", "b. Fructosans", "c. Mannosans", "d. Glucosaminans", "e. Glucosans"], a: 4 },
+            { q: "Starch is an example of:", o: ["a. Structural polysaccharides present in animals", "b. Structural polysaccharides present in plants", "c. Nutrient polysaccharides present in animals", "d. Nutrient polysaccharides present in plants", "e. none of the above"], a: 3 },
+            { q: "A polysaccharide indigestible by man is:", o: ["a. Amylopectin", "b. Glycogen", "c. Cellulose", "d. Amylose", "e. Cellobiose"], a: 2 },
+            { q: "A branch component of starch is:", o: ["a. Glucose", "b. Amylopectin", "c. Amylose", "d. Maltose", "e. None of the above"], a: 1 },
+            { q: "Which of the following statements characterizes glucose:", o: ["a. It usually exists in the furanose form", "b. It is a ketose", "c. Carbon 2 is the anomeric carbon atom", "d. It forms part of the disaccharide sucrose", "e. It is oxidized to form sorbitol"], a: 3 },
+            { q: "Glucuronic acid is produced from… of Glucose", o: ["a. Oxidation of first carbon", "b. Oxidation of last carbon", "c. Reduction of first carbon", "d. Reduction of last carbon"], a: 1 },
+            { q: "Ribitol is:", o: ["a. Deoxy sugar", "b. Amino sugar", "c. Sugar alcohol", "d. Sugar acid"], a: 2 },
+            { q: "Inulin is a simple polysaccharide built up of:", o: ["a. Glucosamine", "b. Galactose", "c. Fructose", "d. Aldose"], a: 2 },
+            { q: "The end products of glycogen hydrolysis by acid is:", o: ["a. Dextrin", "b. Maltose", "c. Amylose", "d. Glucose"], a: 3 },
+            { q: "The richest site for fructose in the body is:", o: ["a. Mammary gland", "b. Seminal fluid", "c. Thyroid gland", "d. Prostate"], a: 1 },
+            { q: "Which statement is incorrect:", o: ["a. Glucose and mannose are Epimers", "b. a- and B-glucose are Anomers", "c. Glucose and galactose are Anomers", "d. Ribose and xylose are epimers"], a: 2 },
+            { q: "All the following sugars and sugar derivatives are L-form except:", o: ["a. Ascorbic acid", "b. Iduronic acid of Heparan sulfate", "c. Fucose of glycoproteins", "d. Glucuronic acid"], a: 3 },
+            { q: "Sorbitol is:", o: ["a. A sugar alcohol", "b. Obtained from glucose", "c. Obtained from fructose", "d. All of these"], a: 3 },
+            { q: "Cellulose is:", o: ["a. Formed of Beta-glucose", "b. Not digested in human intestine", "c. A simple polysaccharide", "d. All of the above"], a: 3 },
+            { q: "Dextrose is:", o: ["a. An aldopentose", "b. An aldohexose", "c. A ketohexose", "d. A ketopentose"], a: 1 },
+            { q: "Starch is:", o: ["a. A heterogeneous polysaccharide", "b. Composed of Beta-glucose", "c. Not digested by amylase", "d. All of the above", "e. None of the above"], a: 4 },
+            { q: "Carbohydrates in glycoproteins are always O-linked.", o: ["a. True", "b. False"], a: 1 },
+            { q: "Lactose is:", o: ["a. A non-reducing sugar", "b. Formed of alpha-glucose and Beta-fructose", "c. both a & b", "d. None of these"], a: 3 },
+            { q: "Carbohydrates in proteoglycans are usually O-linked.", o: ["a. True", "b. False"], a: 0 },
+            { q: "Amylase enzyme can hydrolyze:", o: ["a. Starch", "b. Dextrins", "c. Glycogen", "d. All of these"], a: 3 },
+            { q: "Which carbohydrate will you find in greatest abundance in potatoes?", o: ["a. starch", "b. cellulose", "c. sucrose", "d. glycogen", "e. lactose"], a: 0 },
+            { q: "A pair of sugars that differ in the configuration around the functional group is called:", o: ["a. Anomers", "b. Epimers", "c. Racemers", "d. Stereoisomers"], a: 0 },
+            { q: "All of the following are sugar alcohols except:", o: ["a. Galactitol", "b. Mannitol", "c. Xylulose", "d. Sorbitol"], a: 2 },
+            { q: "The glycosidic linkage seen in sucrose is:", o: ["a. Alpha 1-4", "b. Beta 1-4", "c. Alpha 1-6", "d. Alpha 1-2"], a: 3 },
+            { q: "All the following have glycosidic bonds except:", o: ["a. Maltose", "b. Sucrose", "c. N-acetyl glucosamine", "d. lactose"], a: 2 },
+            { q: "Sucrose consists of:", o: ["a. alpha-glucose + Beta-glucose", "b. alpha-glucose + Beta-fructose", "c. alpha-glucose + Beta-galactose", "d. alpha-glucose + Beta-mannose"], a: 1 },
+            { q: "All the following bonds are non-covalent except:", o: ["a. Bond between core proteins and GAGS", "b. Bond between hyaluronic acid and link protein", "c. Bond between link protein and core protein", "d. Both A and B"], a: 0 },
+            { q: "The glycosidic linkage seen in lactose is:", o: ["a. Alpha 1-4", "b. Beta 1-4", "c. Alpha 1-6", "d. Alpha 1-2"], a: 1 },
+            { q: "The glycosidic linkage seen in maltose is:", o: ["a. Alpha 1-4", "b. Beta 1-4", "c. Alpha 1-6", "d. Alpha 1-2"], a: 0 },
+            { q: "Heteropolysaccharide that doesn’t contain uronic acid is:", o: ["a. Keratan sulfate", "b. Dermatan sulfate", "c. Chondroitin sulfate", "d. Hyaluronic acid"], a: 0 },
+            { q: "D-glucose and D-fructose are:", o: ["a. Epimers at C2", "b. Epimers at C 4", "c. Anomers", "d. Aldose ketose isomers"], a: 3 },
+            { q: "All of the following are glucosans except:", o: ["a. Starch", "b. Inulin", "c. Cellulose", "d. Glycogen"], a: 1 },
+            { q: "Amylopectin is characterized by all of the following except:", o: ["a. It is a branched polymer", "b. Its structure is very close to glycogen", "c. Contains alpha 1-4 and alpha 1-6 bonds", "d. Hydrolysis by amylase gives maltose and fructose"], a: 3 },
+            { q: "Cellulose is characterized by all of the following except:", o: ["a. It is a glucosan", "b. It is linear polymer", "c. Consists of Beta-glucose units", "d. Easily digested as it contains glycosidic bonds"], a: 3 },
+            { q: "The only sulfate free GAG is:", o: ["a. Heparin", "b. Hyaluronic acid", "c. Keratan sulphate", "d. Dermatan sulfate"], a: 1 },
+            { q: "Cellulose is not digested as it contains:", o: ["a. alpha-glucosidic bonds", "b. Beta-galactosidic bonds", "c. Beta-glucosidic bonds", "d. alpha-fructosidic bonds"], a: 2 },
+            { q: "Storage CHO in plants:", o: ["a. Starch", "b. Cellulose", "c. Glycogen", "d. GAGS"], a: 0 },
+            { q: "Storage CHO in animals:", o: ["a. Starch", "b. Cellulose", "c. Glycogen", "d. GAGS"], a: 2 },
+            { q: "Structural CHO in plants:", o: ["a. Starch", "b. Cellulose", "c. Glycogen", "d. GAGS"], a: 1 },
+            { q: "Structural CHO in animals:", o: ["a. Starch", "b. Cellulose", "c. Glycogen", "d. GAGS"], a: 3 },
+            { q: "The only Sulfate free GAG is:", o: ["a. Hyaluronic acid", "b. Chondroitin Sulfate", "c. Keratan Sulfate", "d. Heparan Sulfate", "e. Dermatan Sulfate"], a: 0 },
+            { q: "The only uronic acid-free GAG is:", o: ["a. Hyaluronic acid", "b. Chondroitin sulfate", "c. Keratan sulfate", "d. Heparan sulfate", "e. Dermatan sulfate"], a: 2 },
+            { q: "The major GAG present in cartilage is:", o: ["a. Hyaluronic acid", "b. Chondroitin sulfate", "c. Keratan sulfate", "d. Heparan sulfate", "e. Dermatan sulfate"], a: 1 },
+            { q: "Important for corneal transparency:", o: ["a. Hyaluronic acid", "b. Chondroitin sulfate", "c. Keratan sulfate", "d. Heparan sulfate", "e. Dermatan sulfate"], a: 2 },
+            { q: "Important anti-coagulant GAG:", o: ["a. Hyaluronic acid", "b. Chondroitin sulfate", "c. Heparin", "d. Heparan sulfate"], a: 2 },
+            { q: "GAG that plays a role in cell membrane receptors:", o: ["a. Hyaluronic acid", "b. Chondroitin sulfate", "c. Keratan sulfate", "d. Heparan sulfate", "e. Dermatan sulfate"], a: 3 },
+            { q: "GAG that is important for maintenance of shape of sclera:", o: ["a. Chondroitin sulfate", "b. Keratan sulfate", "c. Heparan sulfate", "d. Dermatan sulfate"], a: 3 },
+            { q: "The major component of proteoglycans is usually:", o: ["a. Carbohydrates", "b. Lipids", "c. Proteins", "d. None of the above"], a: 0 },
+            { q: "Which of the following is not a phospholipid?", o: ["a- Sphingomyelin", "b- Cerebroside", "c- Cephalin", "d- Lecithin"], a: 1 },
+            { q: "The structure of stearic acid is:", o: ["a- 16 carbon, no double bond", "b- 18 carbon, no double bond", "c- 18 carbon, two double bond", "d- 18 carbon, three double bond"], a: 1 },
+            { q: "The structure of oleic acid can be described as:", o: ["a- 16 carbon, no double bond", "b- 18 carbon, one double bond", "c- 18 carbon, two double bond", "d- 18 carbon, three double bond"], a: 1 },
+            { q: "The major fat in adipose tissue is:", o: ["a- Phospholipid", "b- Cholesterol", "c- Sphingolipids", "d- Triacyl glycerol"], a: 3 },
+            { q: "All the following statements are true with regard to phospholipids, except:", o: ["a- They are Ionic compounds", "b- They have surfactant properties", "c- They are components of biomembranes", "d- They are resistant to the action of enzymes"], a: 3 },
+            { q: "Sphingomyelin on hydrolysis yields all the following, EXCEPT:", o: ["a- Sphingosine", "b- Glucose", "c- Phosphate", "d- Choline"], a: 1 },
+            { q: "Which of the following is not true about linoleic acid?", o: ["a- It contains 18 carbons.", "b- It contains 2 double bonds.", "c- Not formed inside the body.", "d- It is omega 3 FA."], a: 3 },
+            { q: "A ganglioside on hydrolysis gives all the following, EXCEPT:", o: ["a- Fatty acid", "b- Glycerol", "c- Sphingosine", "d- N-acetyl neuraminic acid"], a: 1 },
+            { q: "Cholesterol contains how many carbon atoms?", o: ["a- 6", "b- 12", "c- 27", "d- 30"], a: 2 },
+            { q: "A saturated FA which contains 16 C atoms is:", o: ["a- Palmitoleic acid", "b- Oleic acid", "c- Stearic acid", "d- Palmitic acid"], a: 3 },
+            { q: "Which of the following is not true about linolenic acid:", o: ["a- It contains 18 C atoms.", "b- It contains 2 double bonds.", "c- Not formed inside the body.", "d- It is omega 3 FA."], a: 1 },
+            { q: "FA in lung surfactants:", o: ["a- Palmitic acid only.", "b- Stearic acid only.", "c- Both of them.", "d- None of the above."], a: 0 },
+            { q: "Phospholipids containing choline include all of the following, EXCEPT:", o: ["a- Phosphatidyl choline.", "b- Sphingomyelin.", "c- Lecithin.", "d- Cardiolipins."], a: 3 },
+            { q: "Ceramide consists of:", o: ["a- Sphingosine and galactose.", "b- Sphingosine and FA.", "c- Glycerol and galactose.", "d- None of the above."], a: 1 },
+            { q: "All of the following are glycolipides, EXCEPT:", o: ["a- Sulfatides.", "b- Lecithin.", "c- Ganglioside.", "d- Cerebrosides."], a: 1 },
+            { q: "All are sphingolipids, EXCEPT:", o: ["a- Sphingomyelin.", "b- Sulfatides.", "c- Cephalin.", "d- Ganglioside."], a: 2 },
+            { q: "The sphingolipid which contains NANA sialic acid is:", o: ["a- Sulfolipids.", "b- Gangliosides.", "c- Cerebroside.", "d- Sphingomyelin."], a: 1 },
+            { q: "True statements about lipids include the following except:", o: ["a- They are an intracellular energy source.", "b- They are poorly soluble in water.", "c- They are structural components of membranes.", "d- They are composed of only carbon, hydrogen and oxygen."], a: 3 },
+            { q: "Fatty acids that are dietary essentials in humans include which of the following:", o: ["a- Palmitic acid.", "b- Stearic acid.", "c- Oleic acid.", "d- Linoleic."], a: 3 },
+            { q: "A compound normally used to conjugate bile acid is:", o: ["a- Serine", "b- Glucuronic acid", "c- Fatty acids", "d- Glycine"], a: 3 },
+            { q: "Sphingosine is the backbone of all the following except:", o: ["a- Lecithin", "b- Ganglioside", "c- Cerebroside", "d- Sphingomyelin"], a: 0 },
+            { q: "Which of the following is not a phospholipid:", o: ["a- Cerebroside", "b- Cardiolipin", "c- Lecithin", "d- Sphingomyelin"], a: 0 },
+            { q: "If choline is replaced by ethanolamine, Lecithin will be:", o: ["a- Sphingomyelin", "b- Lipositol", "c- Cephalin", "d- Cerebroside"], a: 2 },
+            { q: "Hydrogenation of Linoleic acid produces:", o: ["a- Linoleic acid", "b- Palmitic Acid", "c- Palmitoleic Acid", "d- Stearic Acid"], a: 3 },
+            { q: "Lecithin contains:", o: ["a- Two fatty acids", "b- Phosphate", "c- Glycerol", "d- Choline", "e- All of the above"], a: 4 },
+            { q: "18 Carbon FA is:", o: ["a- Stearic", "b- Linoleic", "c- Oleic", "d- Linolenic", "e- All of the above"], a: 4 },
+            { q: "Substance not steroid in nature:", o: ["a- Testosterone", "b- Estrogen", "c- Progesterone", "d- Prostaglandins"], a: 3 },
+            { q: "All the following can be synthesized from Arachidonic acid except:", o: ["a- Prostaglandins", "b- Thromboxanes", "c- Lipoxins", "d- Interleukins"], a: 3 },
+            { q: "Which of the following regulate blood cholesterol:", o: ["a- Oleic Acid", "b- Linoleic Acid", "c- Arachidonic Acid", "d- None of the above"], a: 0 },
+            { q: "From where steroids, a biologically active organic compound, are derived?", o: ["a- Cholesterol", "b- Hormones", "c- Chemicals", "d- Carbohydrates"], a: 0 },
+            { q: "A patient has high cholesterol. The dietitian encouraged him to limit consuming food considered as a rich dietary source. What will dietitian advise the patient to eat (to limit)?", o: ["a- Brain", "b- Olive oil", "c- Meat", "d- Liver"], a: 1 },
+            { q: "What is the nitrogenous base present in Lecithin?", o: ["a- Choline", "b- Ethanolamine", "c- Inositol", "d- Serine", "e- All of the above"], a: 0 },
+            { q: "Why are olive oils preferred than others?", o: ["a- It is rich in monounsaturated fatty acids.", "b- It is rich in arachidonic acid.", "c- It is rich in polyunsaturated fatty acids.", "d- It is rich in most of essential fatty acids."], a: 0 },
+            { q: "Which of the following describes the structure of bile salts?", o: ["a- They are conjugated either with Alanine or Tyrosine.", "b- They are complex lipids.", "c- They are secondary bile salts derivatives.", "d- They contain either sodium or potassium."], a: 3 },
+            { q: "Which FA is present in Cerebrosides?", o: ["a- Lignoceric acid", "b- Arachidonic acid", "c- Linoleic acid", "d- Nervonic acid"], a: 0 },
+            { q: "Which of the following is precursor for Vitamin D3?", o: ["a- Ergosterol", "b- 22-Dihydro Ergosterol", "c- 7-Dehydro Cholesterol", "d- Cholesterol"], a: 2 },
+            { q: "Which of the following doesn’t have amphipathic property?", o: ["a- Cholesterol", "b- Lecithin", "c- Sulfatides", "d- Tri Palmitin"], a: 3 },
+            { q: "Which of the following has double bond at Omega 15?", o: ["a- Linoleic acid", "b- Linolenic acid", "c- Arachidonic acid", "d- Nervonic acid"], a: 2 },
+            { q: "What is function of Cephalin (Phosphatidyl Ethanolamine)?", o: ["a- Blood clotting factor", "b- Detoxification", "c- Myelin sheath of nervous tissue", "d- All of the above"], a: 0 },
+            { q: "When comparing Glycosphingolipids and Phosphosphingolipids, Glycosphingolipids:", o: ["a- Are found in membranes of nervous tissues", "b- Contain Ceramide", "c- Contain Sugar moieties", "d- Contain Fatty acid"], a: 2 },
+            { q: "Which of the following is long chain PUFA?", o: ["a- Palmitoleic acid", "b- Oleic acid", "c- Linoleic acid", "d- Stearic acid"], a: 2 },
+            { q: "Which combination of the following represents Glycosphingolipids?", o: ["a- Ceramide with one or more sugar residues", "b- Sphingosine with Phosphoric acid", "c- Sphingosine with Galactose or Glucose", "d- Ceramide with Choline"], a: 0 },
+            { q: "What is the number of carbon atoms in Cholesterol?", o: ["a- 17", "b- 19", "c- 27", "d- 30"], a: 2 },
+            { q: "Which of the following contains Sialic acid?", o: ["a- Gangliosides", "b- Sulfatides", "c- Cerebrosides", "d- Cephalin"], a: 0 },
+            { q: "Cholesterol is precursor for the synthesis of which of the following?", o: ["a- Prostaglandins", "b- Sphingomyelin", "c- Fatty acids", "d- Bile acids"], a: 3 },
+            { q: "Blood cholesterol level in a patient is 250 mg/dL. Which FA does he need?", o: ["a- Palmitic acid", "b- Arachidonic acid", "c- Nervonic acid", "d- Oleic acid"], a: 3 },
+            { q: "Which of the following lipids have polar charge?", o: ["a- Cholesterol", "b- Phospholipids", "c- All of the above", "d- None of the above"], a: 2 },
+            { q: "Which of the following bonds is present in Ceramide?", o: ["a- Amide linkage", "b- Ester bond", "c- Glycosidic bond", "d- Covalent linkage"], a: 0 },
+            { q: "Which of the following is essential FA?", o: ["a- Oleic acid", "b- Palmitic acid", "c- Nervonic acid", "d- Linolenic acid"], a: 3 },
+            { q: "Which of the following compounds contain Steroid Nucleus?", o: ["a- Sphingolipids", "b- Sodium Glyco Cholic acid", "c- Gangliosides", "d- Sulfatides"], a: 1 },
+            { q: "What does depot fat of mammalian cells comprise mostly of?", o: ["a- Phospholipids", "b- Cholesterol", "c- Cholesterol ester", "d- Triacylglycerol"], a: 3 },
+            { q: "A 54-year-old patient was diagnosed with coronary heart disease. Which fatty acid should be included in his diet?", o: ["a- Palmitic acid", "b- Linoleic acid", "c- Oleic acid", "d- Arachidonic acid"], a: 2 },
+            { q: "To which compounds do Cholic acid and Chenodeoxy Cholic acid belong to?", o: ["a- Secondary bile acids", "b- Conjugated bile acids", "c- Bile salts", "d- Primary bile acids"], a: 3 },
+            { q: "Which compounds are Glycerophospholipids?", o: ["a- Lecithin and Sphingomyelin", "b- Phosphatidate and Cerebrosides", "c- Lecithin and Phosphatidic acid", "d- Lecithin and Cerebrosides"], a: 2 },
+            { q: "What is the number and position of double bonds in Linolenic acid?", o: ["a. 20 : 4 ; 5, 8, 11, 14.", "b. 18 : 2 ; 9, 12.", "c. 18 : 3 ; 9, 12, 15.", "d. 18 : 1 ; 9."], a: 2 },
+            { q: "Which of the following compounds contain Ceramide?", o: ["a. Sialic acid.", "b. Sphingomyelin.", "c. True fats.", "d. Oleic acid."], a: 1 },
+            { q: "Which of the following statements describe secondary bile acids?", o: ["a. Deconjugation and 7-dehydroxylation.", "b. Conjugation and 7-dehydroxylation.", "c. Conjugation with salts.", "d. Deconjugation and 7-hydroxylation."], a: 0 },
+            { q: "Which statement best describes bile acids/salts?", o: ["a. Hydrophobic steroids.", "b. Formed in liver as secondary.", "c. Conjugated in intestine.", "d. Synthesized in liver from cholesterol."], a: 3 },
+            { q: "Which of the following formulae best describes the fatty acid in the figure (Linoleic)?", o: ["A. (18:3; Delta 9,12,15).", "B. (18:2; Delta 9,12).", "C. (18:2; Delta 6,9).", "D. (18:3; Delta 6,9,18)."], a: 1 },
+            { q: "Which of the following compounds are phospholipids?", o: ["a- Triacylglycerol and Sulfatides.", "b- Cephalin and Cerebrosides.", "c- Lecithin and Sphingomyelin.", "d- Cholesterol and Gangliosides"], a: 2 },
+            { q: "Which of the following results from long umbilical cord?", o: ["a) Fetal strangulation", "b) Delayed separation of placenta", "c) Insufficient blood supply to the fetus", "d) Premature separation of placenta"], a: 0 },
+            { q: "Excessive penetration of the endometrium only by the trophoblast will result in which congenital abnormality?", o: ["a) Placenta percreta", "b) Placenta previa", "c) Placenta accreta", "d) Accessory Placenta"], a: 2 },
+            { q: "Somatopleuric layer of lateral plate mesoderm gives:", o: ["a) Cardiogenic plate", "b) Voluntary muscles of trunk", "c) Visceral layer of the pleura", "d) Axial skeleton"], a: 1 },
+            { q: "Tail fold leads to the formation of:", o: ["a) Allantois", "b) Hindgut", "c) Midgut", "d) Foregut"], a: 1 },
+            { q: "All the following are correct regarding the full-term placenta EXCEPT:", o: ["a) The fetal surface is shiny", "b) The fetal surface is smooth", "c) The cotyledons are on the maternal surface", "d) It coverers 50% of the deciduas"], a: 3 },
+            { q: "All of the following conditions may cause severs postpartum hemorrhage EXCEPT:", o: ["a) Placenta percreta", "b) Placenta previa", "c) Accessory placenta", "d) Placenta accrete"], a: 1 },
+            { q: "Which of the following structures forms the roof of the amniotic cavity?", o: ["a) Mesoderm", "b) Endoderm", "c) Amniotic membrane", "d) Ectoderm"], a: 3 },
+            { q: "The yolk sac is surrounded by which of the following:", o: ["a) Somatopluric secondary mesoderm", "b) Somatopluric primary mesoderm", "c) Splanchnopleuric Secondary mesoderm", "d) Splanchnopleuric primary mesoderm"], a: 3 },
+            { q: "All the following structures are included in the primitive umbilical cord EXCEPT:", o: ["a) Body stalk.", "b) Part of extrembryonic coelom.", "c) Allantois", "d) Septum transversum."], a: 3 },
+            { q: "Longitudinal folding is due to:", o: ["a) Rapid growth of the brain and spinal cord", "b) Rapid growth of notochord", "c) Rapid growth of the brain only", "d) Rapid growth of somites"], a: 0 },
+            { q: "The following are correct regarding the chorionic villi EXCEPT:", o: ["a) The primary villi contain trophoblasts only", "b) The whole surface of the blastocyst possesses villi till the end of pregnancy", "c) The tertiary villi contain blood capillaries", "d) The anchoring villi fix the embryo."], a: 1 },
+            { q: "The midgut is formed due to:", o: ["a) Lateral folding", "b) Cephalic longitudinal folding", "c) Caudal longitudinal folding", "d) None of the above"], a: 0 },
+            { q: "Results of fertilization are the following EXCEPT:", o: ["a) The number of chromosomes returns to the diploid number (46)", "b) Determination of the sex of the embryo", "c) Formation of blastocyst", "d) Start of cleavage"], a: 2 },
+            { q: "The following are correct regarding the notochord EXCEPT:", o: ["a) It forms the embryonic basis of the axial skeleton", "b) It affects the overlying ectoderm to differentiate into neural tissue", "c) It lies in the midline between the roof of the yolk sac and the embryonic ectoderm", "d) It is initially formed cranially and develops caudally as the embryo grows"], a: 3 },
+            { q: "The type of deciduas which will persist (not degenerate) till the end of pregnancy is:", o: ["a) Decidua marginalis", "b) Decidua capsularis", "c) Decidua basalis", "d) Decidua parietalis"], a: 2 },
+            { q: "Implantation occurs in:", o: ["a) Lower uterine segment", "b) Posterior wall of cervix", "c) Anterior wall of cervix", "d) Posterior wall of the fundus"], a: 3 },
+            { q: "Which is true about Oligohydramoins:", o: ["a) The amniotic fluid is 1500-2000 ml at birth", "b) It is associated with esophageal atresia", "c) It is a normal condition", "d) It is associated with renal agenesis the fetus"], a: 3 },
+            { q: "Fetal strangulation may result from:", o: ["a) Double umbilical cord.", "b) Short umbilical cord.", "c) Long umbilical cord.", "d) Abnormal attachment of the umbilical cord to the placenta."], a: 2 },
+            { q: "Which of the followings is connected to the yolk stalk:", o: ["a) Allantois", "b) Midgut", "c) Hindgut", "d) Foregut"], a: 1 },
+            { q: "All the following are correct regarding the full-term placenta EXCEPT:", o: ["a) It coverers 50% of the deciduas", "b) The fetal surface is shiny", "c) The cotyledons are on the maternal surface", "d) It is 15-25 cm diameter."], a: 0 },
+            { q: "All of the following structures are fetal membranes EXCEPT:", o: ["a) Amnion", "b) Lateral plate mesoderm", "c) Chorion", "d) Yolk sac"], a: 1 },
+            { q: "The yolk sac surrounded by which of the following:", o: ["a) Splanchnopleuric Secondary mesoderm", "b) Somatopluric secondary mesoderm", "c) Somatopluric primary mesoderm", "d) Splanchnopleuric primary mesoderm"], a: 3 },
+            { q: "Folding occurs in:", o: ["a) 5th week", "b) 4th week", "c) 2nd week", "d) 3rd week"], a: 1 },
+            { q: "The maternal origin of the placenta is formed by which one of the following?", o: ["a) Decidua parietalis", "b) Decidua basalis", "c) Decidua marginalis", "d) Decidua capsularis"], a: 1 },
+            { q: "Regarding the ovum:", o: ["a) It contains 22 + XX chromosomes", "b) It is smaller than the sperm", "c) It is freely motile", "d) Zona pellucida is its acellular glycoprotein outer membrane"], a: 3 },
+            { q: "The following are true about implantation EXCEPT:", o: ["a) Zona pellucida disappears before implantation", "b) Inner cell mass will form the embryo proper", "c) Morula reaches the uterus nearly 3 days after fertilization", "d) Trophoblast will form the maternal part of the placenta"], a: 3 },
+            { q: "The following are correct regarding implantation EXCEPT:", o: ["a) The blastocyst attaches to the endometrium by its embryonic pole", "b) It will not occur unless zona pellucida disappears", "c) It is completed by the 11 th day after fertilization", "d) It means attachment of the blastocyst to the myometrium"], a: 3 },
+            { q: "Which of the following is the diameter of the definitive umbilical cord:", o: ["a) 6 dm", "b) 8 cm", "c) 2 cm", "d) 4 cm"], a: 2 },
+            { q: "Which of the following is connected to the yolk stalk:", o: ["a) Midgut", "b) Hindgut", "c) Allantois", "d) Foregut"], a: 0 },
+            { q: "During the late months of pregnancy, the placental barriers consists of:", o: ["a) Cyto and sycytiotrophoblast.", "b) Intraembryonic mesoderm and Cyto and syncytiotrophoblasts.", "c) Extraembryonic mesoderm and cytotrophoblast", "d) Endothelium of fetal capillaries & syncytiotrophoblasts and Fibrinoid materials"], a: 3 },
+            { q: "What is the origin of the primordial germ cells:", o: ["a) Mesoderm of embryonic disc", "b) Mesoderm surrounds the allantois", "c) Mesoderm surrounds the amnion", "d) Mesoderm surrounds the yolk stalk"], a: 3 },
+            { q: "Which of the following structures forms the fetal part of the placenta:", o: ["a) Chorion frondosum", "b) Chorion levae", "c) Decidua basalis", "d) Decidua capsularis"], a: 0 },
+            { q: "The following is true regarding the results of folding of the embryo EXCEPT:", o: ["a) It results in rapid growth of the placenta", "b) It leads to incorporation of the yolk sac into the embryo", "c) The cloaca and allantois become ventral in position", "d) It results in cylindrical embryo"], a: 0 },
+            { q: "The following are true regarding cleavage EXCEPT:", o: ["a) It means repeated mitosis of the embryo", "b) The cells formed are called blastomeres", "c) It occurs in the uterine tube medial to the ampulla", "d) The morula is the embryo with 4-8 blastomeres"], a: 3 }
+        ];
         BLOOD_QUESTIONS.forEach(q => q.mod = 'blood');
         FOUNDATION_QUESTIONS.forEach(q => q.mod = 'foundation');
         const ALL_DATA = [...BLOOD_QUESTIONS, ...FOUNDATION_QUESTIONS];
@@ -632,9 +964,10 @@
         }
 
         function loadQ() {
+            if (sessionQs.length === 0) return;
             const q = sessionQs[currentIdx];
             const qContainer = document.getElementById('q-container');
-            qContainer.classList.remove('shake'); // إزالة الهزة القديمة
+            qContainer.classList.remove('shake');
 
             document.getElementById('q-text').innerText = q.q;
             const box = document.getElementById('options-box');
@@ -643,7 +976,6 @@
             q.o.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'opt'; btn.innerText = opt;
-
                 const alreadySolvedInThisSession = q.sessionSolved === true;
 
                 if ((progress[q.q] === 'correct' || alreadySolvedInThisSession || isReview)) {
@@ -671,8 +1003,6 @@
             } else {
                 btn.classList.add('wrong-opt');
                 document.querySelectorAll('.opt')[q.a].classList.add('correct-opt');
-
-                // إضافة الهزة للكارت مع ضمان بقاء مكانه
                 const qContainer = document.getElementById('q-container');
                 qContainer.classList.add('shake');
                 progress[q.q] = 'wrong';
@@ -718,6 +1048,9 @@
                 if (state === 'correct') d.className = 'dot correct';
                 else if (state === 'wrong' && solvedInSession) d.className = 'dot wrong';
                 else d.className = 'dot';
+
+                // إعادة إضافة كلاس active للتنسيق الأزرق
+                if (i === currentIdx) d.classList.add('active');
             });
         }
 
@@ -730,4 +1063,3 @@
 </body>
 
 </html>
-
