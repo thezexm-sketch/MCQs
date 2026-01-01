@@ -730,7 +730,7 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "The root for small intestine is", o: ["A. Entero", "B. Duedeno", "C. Jejuno", "D. Ileo"], a: 0 },
     { q: "Rectocele is herniation of the rectum", o: ["A. True", "B. False"], a: 0 },
     { q: "Anus and rectum is procto", o: ["A. True", "B. False"], a: 0 },
-    { q: "Sigmoidoscope is an instrument used to examine the sigmoid colon", o: ["A. Gastroscope", "B. Clonoscope", "C. Sigmoidoscope", "D. None of the above"], a: 2 },
+    { q: "Sigmoidoscope is an instrument used to examine the sigmoid colon", o: ["A. Gastroscope", "B. Colonoscope", "C. Sigmoidoscope", "D. None of the above"], a: 2 },
     { q: "Inflammation of small intestine is called", o: ["A. Ilitis", "B. Ileitis", "C. Enteritis", "D. Colitis"], a: 2 },
     { q: "A proctoscope is used to examine the rectum", o: ["A. Rectum", "B. Intestine", "C. Colon", "D. Stomach"], a: 0 },
     { q: "Delivering food through stomach via surgical opening is", o: ["A. Gastrectomy", "B. Gastrotomy", "C. Esophagectomy"], a: 1 },
@@ -955,4 +955,5 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "Anesthesia means:", o: ["A. Sleeping induced by narcotics", "B. lack of sensation", "C. Oversensitivity to pain", "D. No pain"], a: 1 },
     { q: "Increased pain sensation (oversensitivity) is called:", o: ["A. Hypertension", "B. Hyperalgesia", "C. Hypoesthesia", "D. Analgesia"], a: 1 }
 ];
+
 
