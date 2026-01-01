@@ -705,7 +705,7 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "Sclerosis equals", o: ["A. Bad", "B. Hard", "C. Dry", "D. Thick"], a: 1 },
     { q: "Pseudocyesis means", o: ["A. False labor", "B. False pregnancy", "C. False conception", "D. Both B&C"], a: 1 },
     { q: "Hemostasis means stoppage of bleeding", o: ["A. Stoppage", "B. Continuous", "C. Stimulation", "D. Increasing"], a: 0 },
-    { q: "Arteriostenosis means narrowing of artery", o: ["A. Widening of vein", "B. Narrowing of vein", "C. Narrowing of artery", "D. Widening of artery"], a: 2 },
+    { q: "Arteriostenosis means ", o: ["A. Widening of vein", "B. Narrowing of vein", "C. Narrowing of artery", "D. Widening of artery"], a: 2 },
     { q: "Lymphedema means swelling of lymph", o: ["A. Swallowing of lymph", "B. Swelling of lymph", "C. Flow of lymph", "D. Swelling of blood"], a: 1 },
     { q: "Xero means", o: ["A. Wet", "B. Thick", "C. Poison", "D. Dry"], a: 3 },
     { q: "The suffix Rhea equals flow or discharge", o: ["A. Sclerosis", "B. Rhage", "C. Xero", "D. Pachy"], a: 1 },
@@ -955,3 +955,4 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "Anesthesia means:", o: ["A. Sleeping induced by narcotics", "B. lack of sensation", "C. Oversensitivity to pain", "D. No pain"], a: 1 },
     { q: "Increased pain sensation (oversensitivity) is called:", o: ["A. Hypertension", "B. Hyperalgesia", "C. Hypoesthesia", "D. Analgesia"], a: 1 }
 ];
+
