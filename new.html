@@ -99,7 +99,6 @@
             font-size: 0.95rem;
         }
 
-        /* --- باقي التنسيقات من كودك الأصلي --- */
         .opt {
             display: block;
             width: 100%;
@@ -302,7 +301,6 @@
             object-fit: cover;
         }
 
-        /* Badge Styles */
         .badge {
             width: 42px;
             height: 42px;
@@ -382,6 +380,57 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            text-align: center;
+        }
+
+        /* --- التحسينات الجديدة للدائرة --- */
+        .progress-ring-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring__circle-bg {
+            fill: transparent;
+            stroke: var(--border);
+            stroke-width: 10;
+        }
+
+        .progress-ring__circle {
+            fill: transparent;
+            stroke: var(--primary);
+            stroke-width: 10;
+            stroke-dasharray: 565.48;
+            /* 2 * PI * R */
+            stroke-dashoffset: 565.48;
+            transition: stroke-dashoffset 0.8s ease, stroke 0.3s;
+            stroke-linecap: round;
+        }
+
+        .result-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .result-percent {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        .result-score {
+            font-size: 1.1rem;
+            font-weight: 600;
+            opacity: 0.8;
         }
 
         .action-btn {
@@ -484,17 +533,26 @@
     </div>
 
     <div id="success-screen">
-        <h1 style="font-size: 4rem; margin: 0;">🎉</h1>
-        <h2>Well Done!</h2>
+        <div class="progress-ring-container">
+            <svg class="progress-ring" width="200" height="200">
+                <circle class="progress-ring__circle-bg" cx="100" cy="100" r="90" />
+                <circle class="progress-ring__circle" id="result-ring" cx="100" cy="100" r="90" />
+            </svg>
+            <div class="result-content">
+                <div class="result-percent" id="final-percent">0%</div>
+                <div class="result-score" id="final-score">0 / 0</div>
+            </div>
+        </div>
+        <h2 id="result-message">Quiz Completed!</h2>
         <div style="display: flex; gap: 15px; margin-top: 20px;">
             <button class="action-btn" style="background: var(--correct);" onclick="reviewMode()">🔍 Review
                 Answers</button>
             <button class="action-btn" onclick="location.reload()">🏠 Home</button>
         </div>
     </div>
+
     <script src="blood.js"></script>
     <script>
-
         BLOOD_QUESTIONS.forEach(q => q.mod = 'blood');
         FOUNDATION_QUESTIONS.forEach(q => q.mod = 'foundation');
         const ALL_DATA = [...BLOOD_QUESTIONS, ...FOUNDATION_QUESTIONS];
@@ -530,16 +588,11 @@
             ['blood', 'foundation'].forEach(m => {
                 const badge = document.getElementById(`count-${m}`);
                 const qs = ALL_DATA.filter(q => q.mod === m);
-
                 if (currentFilter === 'all') {
-                    // عدد الأسئلة اللي لسه ماتحلتش صح (All)
                     badge.innerText = qs.filter(q => progress[q.q] !== 'correct').length;
-                    badge.classList.remove('wrong-mode');
                     badge.style.background = 'var(--unsolved)';
                 } else {
-                    // عدد الأسئلة الغلط (Incorrect)
                     badge.innerText = qs.filter(q => progress[q.q] === 'wrong').length;
-                    badge.classList.add('wrong-mode');
                     badge.style.background = 'var(--wrong)';
                 }
             });
@@ -567,30 +620,24 @@
         }
 
         function startSession(type) {
-            let baseQs = [];
-            if (currentFilter === 'all') {
-                baseQs = ALL_DATA.filter(q => q.mod === type && progress[q.q] !== 'correct');
-            } else {
-                baseQs = ALL_DATA.filter(q => q.mod === type && progress[q.q] === 'wrong');
-            }
+            let baseQs = (currentFilter === 'all')
+                ? ALL_DATA.filter(q => q.mod === type && progress[q.q] !== 'correct')
+                : ALL_DATA.filter(q => q.mod === type && progress[q.q] === 'wrong');
 
-            if (baseQs.length === 0) return alert("No questions found for this selection!");
+            if (baseQs.length === 0) return alert("No questions found!");
 
-            const inputId = `input-${type}`;
-            let num = document.getElementById(inputId).value;
-
+            let num = document.getElementById(`input-${type}`).value;
             sessionQs = baseQs.sort(() => Math.random() - 0.5).slice(0, parseInt(num) || baseQs.length);
-            currentIdx = 0;
-            isReview = false;
+            sessionQs.forEach(q => { q.sessionSolved = false; q.lastAnswer = null; });
 
+            currentIdx = 0; isReview = false;
             document.getElementById('home-page').classList.add('hidden');
             document.getElementById('quiz-area').style.display = 'block';
             document.getElementById('home-btn').classList.remove('hidden');
             document.getElementById('menu-trigger').style.display = 'flex';
             document.getElementById('sidebar').style.display = 'flex';
 
-            renderSidebar();
-            loadQ();
+            renderSidebar(); loadQ();
         }
 
         function loadQ() {
@@ -603,7 +650,6 @@
             q.o.forEach((opt, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'opt'; btn.innerText = opt;
-
                 if (q.sessionSolved || isReview) {
                     btn.disabled = true;
                     if (i === q.a) btn.classList.add('correct-opt');
@@ -617,11 +663,9 @@
         }
 
         function handleAnswer(choice, q, btn) {
-            const isCorrect = choice === q.a;
             q.lastAnswer = choice;
             q.sessionSolved = true;
-            document.querySelectorAll('.opt').forEach(b => b.disabled = true);
-
+            const isCorrect = choice === q.a;
             if (isCorrect) {
                 btn.classList.add('correct-opt');
                 progress[q.q] = 'correct';
@@ -633,15 +677,32 @@
                 progress[q.q] = 'wrong';
             }
             localStorage.setItem('medV12', JSON.stringify(progress));
-            updateDots();
-            updateDashboard();
+            updateDots(); updateDashboard();
+            if (currentIdx === sessionQs.length - 1) showResults();
+        }
 
-            if (currentIdx === sessionQs.length - 1) {
-                setTimeout(() => {
-                    document.getElementById('quiz-area').style.display = 'none';
-                    document.getElementById('success-screen').style.display = 'flex';
-                }, 1000);
-            }
+        function showResults() {
+            const correctCount = sessionQs.filter(q => q.lastAnswer === q.a).length;
+            const total = sessionQs.length;
+            const percent = Math.round((correctCount / total) * 100);
+
+            // تعديل الدائرة واللون
+            const ring = document.getElementById('result-ring');
+            const percentText = document.getElementById('final-percent');
+            const offset = 565.48 - (percent / 100 * 565.48);
+
+            ring.style.strokeDashoffset = offset;
+            const statusColor = percent >= 50 ? 'var(--correct)' : 'var(--wrong)';
+            ring.style.stroke = statusColor;
+            percentText.style.color = statusColor;
+
+            document.getElementById('final-percent').innerText = percent + "%";
+            document.getElementById('final-score').innerText = `${correctCount} / ${total}`;
+
+            setTimeout(() => {
+                document.getElementById('quiz-area').style.display = 'none';
+                document.getElementById('success-screen').style.display = 'flex';
+            }, 1000);
         }
 
         function renderSidebar() {
@@ -657,11 +718,10 @@
 
         function updateDots() {
             document.querySelectorAll('.dot').forEach((d, i) => {
-                d.classList.remove('active');
+                d.classList.remove('active', 'correct', 'wrong');
                 if (i === currentIdx) d.classList.add('active');
-                const q = sessionQs[i];
-                if (q && q.sessionSolved) {
-                    d.classList.add(q.lastAnswer === q.a ? 'correct' : 'wrong');
+                if (sessionQs[i] && sessionQs[i].sessionSolved) {
+                    d.classList.add(sessionQs[i].lastAnswer === sessionQs[i].a ? 'correct' : 'wrong');
                 }
             });
         }
