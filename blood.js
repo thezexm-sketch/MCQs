@@ -708,7 +708,7 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "Arteriostenosis means ", o: ["A. Widening of vein", "B. Narrowing of vein", "C. Narrowing of artery", "D. Widening of artery"], a: 2 },
     { q: "Lymphedema means swelling of lymph", o: ["A. Swallowing of lymph", "B. Swelling of lymph", "C. Flow of lymph", "D. Swelling of blood"], a: 1 },
     { q: "Xero means", o: ["A. Wet", "B. Thick", "C. Poison", "D. Dry"], a: 3 },
-    { q: "The suffix Rhea equals flow or discharge", o: ["A. Sclerosis", "B. Rhage", "C. Xero", "D. Pachy"], a: 1 },
+    { q: "The suffix ........ equals flow or discharge", o: ["A. Sclerosis", "B. Rhage", "C. Xero", "D. Pachy"], a: 1 },
     { q: "Maldigestion means difficult digestion", o: ["A. Difficult swallowing", "B. Difficult digestion", "C. Dyspepsia", "D. Both B&C"], a: 3 },
     { q: "The prefix Pyro means", o: ["A. Pus", "B. Pyo", "C. Fever", "D. Digestion"], a: 2 },
     { q: "Malacia means", o: ["A. Narrowing", "B. Softness", "C. Thickness", "D. Stoppage"], a: 1 },
@@ -730,7 +730,7 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "The root for small intestine is", o: ["A. Entero", "B. Duedeno", "C. Jejuno", "D. Ileo"], a: 0 },
     { q: "Rectocele is herniation of the rectum", o: ["A. True", "B. False"], a: 0 },
     { q: "Anus and rectum is procto", o: ["A. True", "B. False"], a: 0 },
-    { q: "Sigmoidoscope is an instrument used to examine the sigmoid colon", o: ["A. Gastroscope", "B. Colonoscope", "C. Sigmoidoscope", "D. None of the above"], a: 2 },
+    { q: "........ is an instrument used to examine the sigmoid colon", o: ["A. Gastroscope", "B. Colonoscope", "C. Sigmoidoscope", "D. None of the above"], a: 2 },
     { q: "Inflammation of small intestine is called", o: ["A. Ilitis", "B. Ileitis", "C. Enteritis", "D. Colitis"], a: 2 },
     { q: "A proctoscope is used to examine the rectum", o: ["A. Rectum", "B. Intestine", "C. Colon", "D. Stomach"], a: 0 },
     { q: "Delivering food through stomach via surgical opening is", o: ["A. Gastrectomy", "B. Gastrotomy", "C. Esophagectomy"], a: 1 },
@@ -955,5 +955,6 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "Anesthesia means:", o: ["A. Sleeping induced by narcotics", "B. lack of sensation", "C. Oversensitivity to pain", "D. No pain"], a: 1 },
     { q: "Increased pain sensation (oversensitivity) is called:", o: ["A. Hypertension", "B. Hyperalgesia", "C. Hypoesthesia", "D. Analgesia"], a: 1 }
 ];
+
 
 
