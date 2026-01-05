@@ -1,864 +1,410 @@
 <!DOCTYPE html>
-
 <html lang="en-GB">
 
-
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Med Questions - Pro Version</title>
-
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-
     <style>
         :root {
-
             --bg: #f5f7fa;
-
             --card: #ffffff;
-
             --text: #2d3436;
-
             --primary: #0984e3;
-
             --correct: #27ae60;
-
             --wrong: #d63031;
-
             --border: #dfe6e9;
-
             --unsolved: #b2bec3;
-
         }
-
-
 
         body[data-theme='dark'] {
-
             --bg: #121212;
-
             --card: #1e1e1e;
-
             --text: #f5f6fa;
-
             --primary: #3498db;
-
             --border: #333333;
-
             --unsolved: #636e72;
-
         }
-
-
 
         body {
-
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
             background-color: var(--bg);
-
             color: var(--text);
-
             margin: 0;
-
             transition: 0.3s;
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
             min-height: 100vh;
-
             overflow-x: hidden;
-
         }
-
-
 
         .mode-selector {
-
             display: flex;
-
             gap: 10px;
-
             margin: 20px 0;
-
             width: 95%;
-
             max-width: 500px;
-
             justify-content: center;
-
         }
-
-
 
         .mode-option {
-
             background: var(--card);
-
             padding: 10px 15px;
-
             border-radius: 12px;
-
             border: 2px solid var(--border);
-
             display: flex;
-
             align-items: center;
-
             gap: 10px;
-
             cursor: pointer;
-
             transition: 0.2s;
-
             flex: 1;
-
             justify-content: center;
-
         }
-
-
 
         .radio-circle {
-
             width: 18px;
-
             height: 18px;
-
             border: 2px solid var(--unsolved);
-
             border-radius: 50%;
-
             transition: 0.3s;
-
         }
-
-
 
         .mode-option.active[data-mode="all"] {
-
             border-color: var(--primary);
-
         }
-
-
 
         .mode-option.active[data-mode="all"] .radio-circle {
-
             border-color: var(--primary);
-
             background: var(--primary);
-
             box-shadow: inset 0 0 0 3px var(--card);
-
         }
-
-
 
         .mode-option.active[data-mode="incorrect"] {
-
             border-color: var(--wrong);
-
         }
-
-
 
         .mode-option.active[data-mode="incorrect"] .radio-circle {
-
             border-color: var(--wrong);
-
             background: var(--wrong);
-
             box-shadow: inset 0 0 0 3px var(--card);
-
         }
-
-
-
-        .mode-label {
-
-            font-weight: bold;
-
-            font-size: 0.95rem;
-
-        }
-
-
 
         .module-grid {
-
             display: grid;
-
             grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-
             gap: 25px;
-
             margin-top: 20px;
-
             width: 95%;
-
             max-width: 1100px;
-
         }
-
-
 
         .card {
-
             background: var(--card);
-
             border-radius: 24px;
-
             padding: 20px;
-
             border: 2px solid var(--border);
-
             cursor: pointer;
-
             position: relative;
-
             transition: 0.3s;
-
             overflow: hidden;
-
             text-align: left;
-
         }
-
-
 
         .card:hover {
-
             transform: translateY(-8px);
-
             border-color: var(--primary);
-
         }
-
-
 
         .card-banner {
-
             width: calc(100% + 40px);
-
             margin: -20px -20px 15px -20px;
-
             height: 160px;
-
             object-fit: cover;
-
         }
-
-
 
         .badge {
-
             width: 42px;
-
             height: 42px;
-
             border-radius: 50%;
-
             background: var(--unsolved);
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             font-weight: bold;
-
             color: white;
-
             margin-bottom: 10px;
-
-            transition: 0.3s;
-
         }
-
-
 
         .dots-btn {
-
             position: absolute;
-
             top: 12px;
-
             right: 12px;
-
             font-size: 24px;
-
             color: white;
-
             background: rgba(0, 0, 0, 0.3);
-
             width: 35px;
-
             height: 35px;
-
             border-radius: 50%;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             z-index: 10;
-
         }
-
-
 
         .card-menu {
-
             position: absolute;
-
             top: 52px;
-
             right: 12px;
-
             background: var(--card);
-
             border: 1px solid var(--border);
-
             border-radius: 12px;
-
             display: none;
-
             z-index: 100;
-
         }
-
-
 
         .card-menu div {
-
             padding: 12px 20px;
-
             font-size: 14px;
-
             font-weight: bold;
-
             cursor: pointer;
-
             color: var(--text);
-
             border-bottom: 1px solid var(--border);
-
         }
-
-
 
         .opt {
-
             display: block;
-
             width: 100%;
-
             padding: 16px 20px;
-
             margin-bottom: 12px;
-
             background-color: transparent;
-
             border: 2px solid var(--border);
-
             border-radius: 12px;
-
             cursor: pointer;
-
-            transition: all 0.2s ease;
-
+            transition: 0.2s;
             font-size: 1.1rem;
-
             font-weight: 500;
-
             color: var(--text);
-
             text-align: left;
-
         }
-
-
 
         .correct-opt {
-
             background: var(--correct) !important;
-
             color: white !important;
-
             border-color: var(--correct) !important;
-
         }
-
-
 
         .wrong-opt {
-
             background: var(--wrong) !important;
-
             color: white !important;
-
             border-color: var(--wrong) !important;
-
         }
-
-
-
-        .input-group {
-
-            display: flex;
-
-            gap: 10px;
-
-            margin-top: 15px;
-
-            align-items: center;
-
-        }
-
-
-
-        .q-count-input {
-
-            width: 70px;
-
-            padding: 10px;
-
-            border: 2px solid var(--border);
-
-            border-radius: 10px;
-
-            background: var(--bg);
-
-            color: var(--text);
-
-            text-align: center;
-
-            font-weight: bold;
-
-        }
-
-
 
         .sidebar {
-
             position: fixed;
-
             top: 0;
-
             left: -285px;
-
             width: 260px;
-
             height: 100%;
-
             background: var(--card);
-
             z-index: 4000;
-
             transition: 0.4s;
-
             padding: 20px;
-
             overflow-y: auto;
-
             display: none;
-
             flex-wrap: wrap;
-
             gap: 8px;
-
             align-content: flex-start;
-
         }
-
-
 
         .sidebar.open {
-
             left: 0 !important;
-
         }
-
-
 
         #menu-trigger {
-
             position: fixed;
-
             top: 15px;
-
             left: 15px;
-
             z-index: 5000;
-
             cursor: pointer;
-
             background: var(--primary);
-
             padding: 12px;
-
             border-radius: 12px;
-
             display: none;
-
             flex-direction: column;
-
             gap: 4px;
-
         }
-
-
 
         #menu-trigger span {
-
             width: 20px;
-
             height: 3px;
-
             background: white;
-
         }
-
-
 
         .dot {
-
             width: 38px;
-
             height: 38px;
-
             border-radius: 10px;
-
             background: var(--unsolved);
-
             color: white;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             cursor: pointer;
-
             font-weight: bold;
-
             border: 2px solid transparent;
-
         }
-
-
 
         .dot.active {
-
             border: 3px solid #0000FF !important;
-
             box-shadow: 0 0 15px var(--primary);
-
         }
-
-
 
         .dot.correct {
-
             background: var(--correct);
-
         }
-
-
 
         .dot.wrong {
-
             background: var(--wrong);
-
         }
-
-
 
         #quiz-area {
-
             display: none;
-
             width: 90%;
-
             max-width: 800px;
-
             margin-top: 80px;
-
         }
-
-
 
         .quiz-card {
-
             background: var(--card);
-
             padding: 35px;
-
             border-radius: 25px;
-
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-
             width: 100%;
-
         }
-
-
 
         #success-screen {
-
             display: none;
-
             position: fixed;
-
             inset: 0;
-
             background: var(--bg);
-
             z-index: 9999;
-
             flex-direction: column;
-
             align-items: center;
-
             justify-content: center;
-
             text-align: center;
-
         }
-
-
 
         .progress-ring-container {
-
             position: relative;
-
             width: 200px;
-
             height: 200px;
-
             margin-bottom: 20px;
-
         }
-
-
 
         .progress-ring {
-
             transform: rotate(-90deg);
-
         }
-
-
 
         .progress-ring__circle-bg {
-
             fill: transparent;
-
             stroke: var(--border);
-
             stroke-width: 10;
-
         }
-
-
 
         .progress-ring__circle {
-
             fill: transparent;
-
             stroke: var(--primary);
-
             stroke-width: 10;
-
             stroke-dasharray: 565.48;
-
             stroke-dashoffset: 565.48;
-
             transition: stroke-dashoffset 0.8s ease;
-
             stroke-linecap: round;
-
         }
-
-
 
         .result-content {
-
             position: absolute;
-
             top: 50%;
-
             left: 50%;
-
             transform: translate(-50%, -50%);
-
             display: flex;
-
             flex-direction: column;
-
             align-items: center;
-
         }
-
-
 
         .result-percent {
-
             font-size: 2.5rem;
-
             font-weight: 800;
-
         }
-
-
 
         .action-btn {
-
             padding: 14px 25px;
-
             border: none;
-
             border-radius: 12px;
-
             background: var(--primary);
-
             color: white;
-
             font-weight: bold;
-
             cursor: pointer;
-
             transition: 0.3s;
-
         }
-
-
 
         .footer {
-
             margin-top: 60px;
-
             padding: 25px;
-
             font-weight: bold;
-
             border-top: 1px solid var(--border);
-
             width: 100%;
-
             text-align: center;
-
             opacity: 0.8;
-
         }
-
-
 
         .hidden {
-
             display: none !important;
-
         }
-
-
 
         .fade-in {
-
             animation: fadeIn 0.4s ease-out forwards;
-
         }
-
-
 
         @keyframes fadeIn {
-
             from {
-
                 opacity: 0;
-
                 transform: translateY(10px);
-
             }
-
-
 
             to {
-
                 opacity: 1;
-
                 transform: translateY(0);
-
             }
-
         }
-
-
 
         .shake {
-
             animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
-
         }
-
-
 
         @keyframes shake {
 
-
-
             10%,
-
             90% {
-
                 transform: translate3d(-1px, 0, 0);
-
             }
-
-
 
             20%,
-
             80% {
-
                 transform: translate3d(2px, 0, 0);
-
             }
-
-
 
             30%,
-
             50%,
-
             70% {
-
                 transform: translate3d(-4px, 0, 0);
-
             }
-
-
 
             40%,
-
             60% {
-
                 transform: translate3d(4px, 0, 0);
-
             }
-
         }
 
         @media (max-width: 768px) {
@@ -876,588 +422,323 @@
             }
         }
     </style>
-
 </head>
-
-
 
 <body data-theme="light" onclick="closeAllMenus()">
 
-
-
     <div id="menu-trigger" onclick="event.stopPropagation(); toggleSidebar()">
-
         <span></span><span></span><span></span>
-
     </div>
-
-
 
     <div id="sidebar" class="sidebar"></div>
 
-
-
     <div style="position: fixed; top: 15px; right: 15px; display: flex; gap: 10px; z-index: 3000;">
-
         <button id="home-btn" class="hidden action-btn" onclick="location.reload()"
             style="padding: 10px 15px;">🏠</button>
-
         <button onclick="toggleTheme()" class="action-btn"
             style="padding: 10px 15px; background: var(--card); color: var(--text); border: 1px solid var(--border);">🌓</button>
-
     </div>
-
-
 
     <div id="home-page" class="fade-in">
-
         <h1 style="text-align: center; margin-top: 50px;">1st year Questions</h1>
 
-
-
         <div class="mode-selector">
-
             <div class="mode-option active" data-mode="all" onclick="setFilter('all')">
-
                 <div class="radio-circle"></div>
-
                 <span class="mode-label">All Questions</span>
-
             </div>
-
             <div class="mode-option" data-mode="incorrect" onclick="setFilter('incorrect')">
-
                 <div class="radio-circle"></div>
-
                 <span class="mode-label">Incorrect Only</span>
-
             </div>
-
         </div>
-
-
 
         <div class="module-grid">
-
             <div class="card" onclick="startSession('blood')">
-
                 <div class="dots-btn" onclick="toggleCardMenu(event, 'menu-blood')">⋮</div>
-
                 <div id="menu-blood" class="card-menu">
-
                     <div onclick="resetProgress(event, 'blood')">🔄 Reset Progress</div>
-
                 </div>
-
                 <img src="blood.png" class="card-banner">
-
                 <div class="badge" id="count-blood">0</div>
-
                 <h3>Blood Module</h3>
-
-                <div class="input-group" onclick="event.stopPropagation()">
-
-                    <input type="number" id="input-blood" class="q-count-input" value="20">
-
+                <div class="input-group" style="display:flex; gap:10px; margin-top:15px;"
+                    onclick="event.stopPropagation()">
+                    <input type="number" id="input-blood"
+                        style="width:70px; padding:10px; border-radius:10px; border:2px solid var(--border);"
+                        value="20">
                     <button class="action-btn" style="flex:1;" onclick="startSession('blood')">Start</button>
-
                 </div>
-
             </div>
-
-
 
             <div class="card" onclick="startSession('foundation')">
-
                 <div class="dots-btn" onclick="toggleCardMenu(event, 'menu-found')">⋮</div>
-
                 <div id="menu-found" class="card-menu">
-
                     <div onclick="resetProgress(event, 'foundation')">🔄 Reset Progress</div>
-
                 </div>
-
                 <img src="found.png" class="card-banner">
-
                 <div class="badge" id="count-foundation">0</div>
-
                 <h3>Foundation</h3>
-
-                <div class="input-group" onclick="event.stopPropagation()">
-
-                    <input type="number" id="input-foundation" class="q-count-input" value="20">
-
+                <div class="input-group" style="display:flex; gap:10px; margin-top:15px;"
+                    onclick="event.stopPropagation()">
+                    <input type="number" id="input-foundation"
+                        style="width:70px; padding:10px; border-radius:10px; border:2px solid var(--border);"
+                        value="20">
                     <button class="action-btn" style="flex:1;" onclick="startSession('foundation')">Start</button>
-
                 </div>
-
             </div>
-
-
 
             <div class="card" onclick="startSession('terminology')">
-
                 <div class="dots-btn" onclick="toggleCardMenu(event, 'menu-term')">⋮</div>
-
                 <div id="menu-term" class="card-menu">
-
                     <div onclick="resetProgress(event, 'terminology')">🔄 Reset Progress</div>
-
                 </div>
-
                 <img src="terminology.jpg" class="card-banner">
-
                 <div class="badge" id="count-terminology">0</div>
-
                 <h3>Terminology</h3>
-
-                <div class="input-group" onclick="event.stopPropagation()">
-
-                    <input type="number" id="input-terminology" class="q-count-input" value="20">
-
+                <div class="input-group" style="display:flex; gap:10px; margin-top:15px;"
+                    onclick="event.stopPropagation()">
+                    <input type="number" id="input-terminology"
+                        style="width:70px; padding:10px; border-radius:10px; border:2px solid var(--border);"
+                        value="20">
                     <button class="action-btn" style="flex:1;" onclick="startSession('terminology')">Start</button>
-
                 </div>
-
             </div>
-
         </div>
-
         <div class="footer">Directed by Dr/Mahmoud & Abdallah</div>
-
     </div>
-
-
 
     <div id="quiz-area">
-
         <div class="quiz-card fade-in" id="q-container">
-
             <div id="q-text" style="font-weight: bold; font-size: 1.2rem; margin-bottom: 25px;"></div>
-
             <div id="options-box"></div>
-
             <div style="display:flex; gap:12px; margin-top:25px;">
-
                 <button class="action-btn" style="background:#636e72; flex:1;" onclick="prev()">← Previous</button>
-
                 <button class="action-btn" style="flex:1;" onclick="next()">Next →</button>
-
             </div>
-
         </div>
-
     </div>
-
-
 
     <div id="success-screen">
-
         <div class="progress-ring-container">
-
             <svg class="progress-ring" width="200" height="200">
-
                 <circle class="progress-ring__circle-bg" cx="100" cy="100" r="90" />
-
                 <circle class="progress-ring__circle" id="result-ring" cx="100" cy="100" r="90" />
-
             </svg>
-
             <div class="result-content">
-
                 <div class="result-percent" id="final-percent">0%</div>
-
                 <div class="result-score" id="final-score">0 / 0</div>
-
             </div>
-
         </div>
-
         <h2 id="result-message">Quiz Completed!</h2>
-
         <div style="display: flex; gap: 15px; margin-top: 20px;">
-
             <button class="action-btn" style="background: var(--correct);" onclick="reviewMode()">🔍 Review</button>
-
             <button class="action-btn" onclick="location.reload()">🏠 Home</button>
-
         </div>
-
     </div>
 
-
-
     <script src="blood.js"></script>
-
     <script>
-
-        // تهيئة البيانات
-
+        // 1. البيانات والتهيئة
         if (typeof BLOOD_QUESTIONS === 'undefined') window.BLOOD_QUESTIONS = [];
-
         if (typeof FOUNDATION_QUESTIONS === 'undefined') window.FOUNDATION_QUESTIONS = [];
-
         if (typeof TERMINOLOGY_QUESTIONS === 'undefined') window.TERMINOLOGY_QUESTIONS = [];
 
-
-
         BLOOD_QUESTIONS.forEach(q => q.mod = 'blood');
-
         FOUNDATION_QUESTIONS.forEach(q => q.mod = 'foundation');
-
         TERMINOLOGY_QUESTIONS.forEach(q => q.mod = 'terminology');
 
-
-
         const ALL_DATA = [...BLOOD_QUESTIONS, ...FOUNDATION_QUESTIONS, ...TERMINOLOGY_QUESTIONS];
-
-
-
         let sessionQs = [];
-
         let currentIdx = 0;
-
         let progress = JSON.parse(localStorage.getItem('medV12')) || {};
-
         let isReview = false;
-
         let currentFilter = 'all';
 
-
-
+        // 2. دوال الواجهة والتحكم
         function setFilter(f) {
-
             currentFilter = f;
-
             document.querySelectorAll('.mode-option').forEach(opt => {
-
                 opt.classList.toggle('active', opt.getAttribute('data-mode') === f);
-
             });
-
             updateDashboard();
-
         }
-
-
 
         function toggleTheme() {
-
             const current = document.body.getAttribute('data-theme');
-
             const newTheme = current === 'dark' ? 'light' : 'dark';
-
             document.body.setAttribute('data-theme', newTheme);
-
             localStorage.setItem('medTheme', newTheme);
-
         }
 
-
-
+        // المنطق المطلوب: إخفاء أي سؤال تم حله من عداد الـ All
         function updateDashboard() {
-
             ['blood', 'foundation', 'terminology'].forEach(m => {
-
                 const badge = document.getElementById(`count-${m}`);
-
                 if (!badge) return;
-
                 const qs = ALL_DATA.filter(q => q.mod === m);
 
                 if (currentFilter === 'all') {
-
-                    badge.innerText = qs.filter(q => progress[q.q] !== 'correct').length;
-
+                    // العداد يحسب فقط الأسئلة التي ليس لها أي سجل في progress (لم تُحل إطلاقاً)
+                    const unsolved = qs.filter(q => !progress[q.q]).length;
+                    badge.innerText = unsolved;
                     badge.style.background = 'var(--unsolved)';
-
                 } else {
-
-                    badge.innerText = qs.filter(q => progress[q.q] === 'wrong').length;
-
+                    // العداد يحسب فقط الأسئلة التي سُجلت كخطأ
+                    const wrong = qs.filter(q => progress[q.q] === 'wrong').length;
+                    badge.innerText = wrong;
                     badge.style.background = 'var(--wrong)';
-
                 }
-
             });
-
         }
-
-
 
         function toggleCardMenu(e, id) {
-
             e.stopPropagation();
-
             const menu = document.getElementById(id);
-
             const isVisible = menu.style.display === 'block';
-
             closeAllMenus();
-
             if (!isVisible) menu.style.display = 'block';
-
         }
-
-
 
         function closeAllMenus() {
-
             document.querySelectorAll('.card-menu').forEach(m => m.style.display = 'none');
-
         }
-
-
 
         function resetProgress(e, type) {
-
             e.stopPropagation();
-
             if (!confirm("Reset progress for " + type + "?")) return;
-
             ALL_DATA.filter(q => q.mod === type).forEach(q => delete progress[q.q]);
-
             localStorage.setItem('medV12', JSON.stringify(progress));
-
             updateDashboard();
-
             closeAllMenus();
-
         }
 
-
-
+        // 3. منطق الكويز
         function startSession(type) {
-
             let baseQs = (currentFilter === 'all')
+                ? ALL_DATA.filter(q => q.mod === type && !progress[q.q]) // لم تحل مطلقاً
+                : ALL_DATA.filter(q => q.mod === type && progress[q.q] === 'wrong'); // الخطأ فقط
 
-                ? ALL_DATA.filter(q => q.mod === type && progress[q.q] !== 'correct')
-
-                : ALL_DATA.filter(q => q.mod === type && progress[q.q] === 'wrong');
-
-
-
-            if (baseQs.length === 0) return alert("No questions found in this category!");
-
-
+            if (baseQs.length === 0) return alert("No questions found here!");
 
             let inputEl = document.getElementById(`input-${type}`);
-
             let num = inputEl ? inputEl.value : 20;
 
-
-
             sessionQs = baseQs.sort(() => Math.random() - 0.5).slice(0, parseInt(num) || baseQs.length);
-
             sessionQs.forEach(q => { q.sessionSolved = false; q.lastAnswer = null; });
 
-
-
             currentIdx = 0; isReview = false;
-
             document.getElementById('home-page').classList.add('hidden');
-
             document.getElementById('quiz-area').style.display = 'block';
-
             document.getElementById('home-btn').classList.remove('hidden');
-
             document.getElementById('menu-trigger').style.display = 'flex';
-
             document.getElementById('sidebar').style.display = 'flex';
 
-
-
             renderSidebar(); loadQ();
-
         }
-
-
 
         function loadQ() {
-
             const q = sessionQs[currentIdx];
-
             const container = document.getElementById('q-container');
-
             container.classList.remove('shake');
-
             document.getElementById('q-text').innerText = q.q;
-
             const box = document.getElementById('options-box');
-
             box.innerHTML = '';
 
-
-
             q.o.forEach((opt, i) => {
-
                 const btn = document.createElement('button');
-
                 btn.className = 'opt'; btn.innerText = opt;
 
+                // إذا تم الحل أو كنا في وضع المراجعة
                 if (q.sessionSolved || isReview) {
-
                     btn.disabled = true;
-
                     if (i === q.a) btn.classList.add('correct-opt');
-
                     if (q.lastAnswer === i && i !== q.a) btn.classList.add('wrong-opt');
-
                 } else {
-
-                    btn.onclick = () => handleAnswer(i, q, btn);
-
+                    btn.onclick = () => handleAnswer(i, q);
                 }
-
                 box.appendChild(btn);
-
             });
-
             updateDots();
-
         }
 
-
-
-        function handleAnswer(choice, q, btn) {
+        function handleAnswer(choice, q) {
+            if (q.sessionSolved) return; 
 
             q.lastAnswer = choice;
-
             q.sessionSolved = true;
 
+            const btns = document.querySelectorAll('.opt');
+            btns.forEach(b => b.disabled = true); // قفل كل الأزرار فوراً
+
             if (choice === q.a) {
-
-                btn.classList.add('correct-opt');
-
-                progress[q.q] = 'correct';
-
+                btns[choice].classList.add('correct-opt');
+                progress[q.q] = 'correct'; // تختفي تماماً من الكل
                 confetti({ particleCount: 40, spread: 50 });
-
             } else {
-
-                btn.classList.add('wrong-opt');
-
-                document.querySelectorAll('.opt')[q.a].classList.add('correct-opt');
-
+                btns[choice].classList.add('wrong-opt');
+                btns[q.a].classList.add('correct-opt'); // إظهار الصح
                 document.getElementById('q-container').classList.add('shake');
-
-                progress[q.q] = 'wrong';
-
+                progress[q.q] = 'wrong'; // تذهب لخانة الخطأ وتختفي من "الكل"
             }
 
             localStorage.setItem('medV12', JSON.stringify(progress));
-
             updateDots(); updateDashboard();
 
             if (currentIdx === sessionQs.length - 1) setTimeout(showResults, 1000);
-
         }
-
-
 
         function showResults() {
-
             const correctCount = sessionQs.filter(q => q.lastAnswer === q.a).length;
-
             const total = sessionQs.length;
-
             const percent = Math.round((correctCount / total) * 100);
 
-
-
             const ring = document.getElementById('result-ring');
-
             const percentText = document.getElementById('final-percent');
-
             const offset = 565.48 - (percent / 100 * 565.48);
 
-
-
             ring.style.strokeDashoffset = offset;
-
             const statusColor = percent >= 50 ? 'var(--correct)' : 'var(--wrong)';
-
             ring.style.stroke = statusColor;
-
             percentText.style.color = statusColor;
 
-
-
             document.getElementById('final-percent').innerText = percent + "%";
-
             document.getElementById('final-score').innerText = `${correctCount} / ${total}`;
 
-
-
             document.getElementById('quiz-area').style.display = 'none';
-
             document.getElementById('success-screen').style.display = 'flex';
-
         }
-
-
 
         function renderSidebar() {
-
             const side = document.getElementById('sidebar');
-
             side.innerHTML = '<h3 style="width:100%; border-bottom: 2px solid var(--primary); padding-bottom:10px;">Progress</h3>';
-
             sessionQs.forEach((_, i) => {
-
                 const d = document.createElement('div');
-
-                d.className = 'dot'; d.innerText = i + 1; d.id = `dot-${i}`;
-
+                d.className = 'dot'; d.innerText = i + 1;
                 d.onclick = () => { currentIdx = i; loadQ(); toggleSidebar(); };
-
                 side.appendChild(d);
-
             });
-
         }
-
-
 
         function updateDots() {
-
             document.querySelectorAll('.dot').forEach((d, i) => {
-
                 d.classList.remove('active', 'correct', 'wrong');
-
                 if (i === currentIdx) d.classList.add('active');
-
                 if (sessionQs[i] && sessionQs[i].sessionSolved) {
-
                     d.classList.add(sessionQs[i].lastAnswer === sessionQs[i].a ? 'correct' : 'wrong');
-
                 }
-
             });
-
         }
 
-
-
         function reviewMode() { isReview = true; currentIdx = 0; document.getElementById('success-screen').style.display = 'none'; document.getElementById('quiz-area').style.display = 'block'; loadQ(); }
-
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-
         function next() { if (currentIdx < sessionQs.length - 1) { currentIdx++; loadQ(); } }
-
         function prev() { if (currentIdx > 0) { currentIdx--; loadQ(); } }
 
-        const savedTheme = localStorage.getItem('medTheme') || 'light';
-
-        document.body.setAttribute('data-theme', savedTheme);
-
+         
+        document.body.setAttribute('data-theme', localStorage.getItem('medTheme') || 'light');
         updateDashboard();
-
     </script>
-
 </body>
 
-
-
 </html>
-
