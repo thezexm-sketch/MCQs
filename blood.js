@@ -735,7 +735,7 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "A proctoscope is used to examine the rectum", o: ["A. Rectum", "B. Intestine", "C. Colon", "D. Stomach"], a: 0 },
     { q: "Delivering food through stomach via surgical opening is", o: ["A. Gastrectomy", "B. Gastrotomy", "C. Esophagectomy"], a: 1 },
     { q: "Gastro related to", o: ["A. Intestine", "B. Liver", "C. Stomach", "D. Brain"], a: 2 },
-    { q: "Colostomy means opening in the colon", o: ["A. Excition of the colon", "B. Surgical removal of the colon", "C. Opening in the colon", "D. Both A&B"], a: 2 },
+    { q: "Colostomy means ...", o: ["A. Excition of the colon", "B. Surgical removal of the colon", "C. Opening in the colon", "D. Both A&B"], a: 2 },
     { q: "1st part of small intestine is termed as Duodeno", o: ["A. Jejuno", "B. Ileo", "C. Duodeno", "D. Sigmoido"], a: 2 },
     { q: "The membrane which covers the bone is called", o: ["A. Perichondrium", "B. Periosteum", "C. Pleura", "D. Endosteum"], a: 1 },
     { q: "Skeletal muscle is Rhabdomyo while smooth muscle is Leiomyo", o: ["A. Rhabdomyo – myocardio", "B. Lieomyo – rhabdomyo", "C. Myocardio – rhabdomyo", "D. Rhabdomyo – lieomyo"], a: 3 },
@@ -746,13 +746,13 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "The condition of softening the bone is called", o: ["A. Osteitis", "B. Osteon", "C. Osteomalacia"], a: 2 },
     { q: "The root refers to joint is called", o: ["A. Athero", "B. Arthro", "C. Artherio"], a: 1 },
     { q: "Inflammation of the joint is called", o: ["A. Artheritis", "B. Oastitis", "C. Arthritis"], a: 2 },
-    { q: "Epiphysis is the growth upon the end of a long bone", o: ["A. Short", "B. Long", "C. Both A and B"], a: 1 },
+    { q: "Epiphysis is the growth upon the end of a .... bone", o: ["A. Short", "B. Long", "C. Both A and B"], a: 1 },
     { q: "Inflammation of the bursa protecting a tendon sliding over a bone is termed", o: ["A. Arthritis", "B. Tendonitis", "C. Bursitis", "D. Osteitis"], a: 2 },
     { q: "Specialist in straightening teeth is", o: ["A. Orthist", "B. Dentist", "C. Orthodontist", "D. Physician"], a: 2 },
     { q: "Prosthesis is artificial replacement of destroyed organ", o: ["A. Srerilization of body", "B. Removal of organ", "C. Healing of injury", "D. Artificial replacement of destroyed organ"], a: 3 },
     { q: "Excision of bones of the fingers is", o: ["A. Phalangectomy", "B. Phalangotomy", "C. Phalangoscopy", "D. Phalangitis"], a: 0 },
-    { q: "Tendinitis means inflammation of the tendons", o: ["A. Bones", "B. Muscles", "C. Tendons", "D. Both A & C"], a: 2 },
-    { q: "Humeral related to bone of the upper limb", o: ["A. Ribs", "B. Skull", "C. Upper limb", "D. Lower limb"], a: 2 },
+    { q: "Tendinitis means inflammation of the ....", o: ["A. Bones", "B. Muscles", "C. Tendons", "D. Both A & C"], a: 2 },
+    { q: "....related to bone of the upper limb", o: ["A. Ribs", "B. Skull", "C. Upper limb", "D. Lower limb"], a: 2 },
     { q: "Femoral is related to bone of lower limb", o: ["A. Upper limb", "B. Lower limb", "C. Vertebral column", "D. Skull"], a: 1 },
     { q: "The artificial appliance that replaces amputated parts of the body is", o: ["A. Odonto", "B. Prosth", "C. Bursa", "D. Epiphysis"], a: 1 },
     { q: "Severe pain in joints and inability to move it may be due to", o: ["A. Arthritis", "B. Nephritis", "C. Meningitis", "D. Pneumonitis"], a: 0 },
@@ -817,7 +817,7 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "Tonsillectomy is the excision of the tonsils", o: ["A. Removal", "B. Excision", "C. Incision", "D. Both A and B"], a: 3 },
     { q: "Pharyngotomy is an incision in the", o: ["A. Pharyngostomy", "B. Pharyngotomy", "C. Pharyngectomy", "D. Options A and B"], a: 1 },
     { q: "Impairment of voice is called", o: ["A. Dysphagia", "B. Dyspepsia", "C. Dysphonia", "D. Dyspnea"], a: 2 },
-    { q: "Bronchitis means inflammation of the bronchi", o: ["A. Inflammation", "B. Swelling", "C. Hemorrhage", "D. None of them"], a: 0 },
+    { q: "Bronchitis means ....", o: ["A. Inflammation", "B. Swelling", "C. Hemorrhage", "D. None of them"], a: 0 },
     { q: "The roots Pneumono and Pneumo mean", o: ["A. Pneumono", "B. Pneumo", "C. Pnea", "D. Options A and B"], a: 3 },
     { q: "Inflammation of the lung is called", o: ["A. Pleurisy", "B. Pneumonia", "C. Pneumonectomy", "D. None of them"], a: 1 },
     { q: "Being able to breathe only when standing is", o: ["A. Apnea", "B. Orthopnea", "C. Tachypnea", "D. Bradypnea"], a: 1 },
@@ -843,7 +843,7 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "The surge of blood felt in the arteries when blood is pumped from the heart is", o: ["A. Blood pressure", "B. Pulse", "C. Pericardium", "D. Sphincter"], a: 1 },
     { q: "The sac surrounding the heart is called the", o: ["A. Pleura", "B. Peritoneum", "C. Pericardium", "D. Meninges"], a: 2 },
     { q: "The outermost layer of the heart is the", o: ["A. Endocardium", "B. Epicardium", "C. Myocardium", "D. None of the above"], a: 1 },
-    { q: "Myocarditis means inflammation of the muscle coat of the heart", o: ["A. Endocarditis", "B. Myocarditis", "C. Epicarditis", "D. All of them"], a: 1 },
+    { q: ".....means inflammation of the muscle coat of the heart", o: ["A. Endocarditis", "B. Myocarditis", "C. Epicarditis", "D. All of them"], a: 1 },
     { q: "A specialist in the study of the diseases of the heart is a", o: ["A. Dentist", "B. Hepatologist", "C. Cardiologist", "D. None of them"], a: 2 },
     { q: "A record of the electrical waves given off by the heart is an", o: ["A. Electrocardiogram", "B. Electrocardiography", "C. Electrocardiograph", "D. All of them"], a: 0 },
     { q: "The process of making a recording of EKG or ECG is called", o: ["A. Electrocardiogram", "B. Electrocardiograph", "C. Electrocardiography", "D. None of them"], a: 2 },
@@ -955,6 +955,7 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "Anesthesia means:", o: ["A. Sleeping induced by narcotics", "B. lack of sensation", "C. Oversensitivity to pain", "D. No pain"], a: 1 },
     { q: "Increased pain sensation (oversensitivity) is called:", o: ["A. Hypertension", "B. Hyperalgesia", "C. Hypoesthesia", "D. Analgesia"], a: 1 }
 ];
+
 
 
 
