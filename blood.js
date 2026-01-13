@@ -594,27 +594,27 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "The word 'percutaneous' means:", o: ["A. Through the cranium.", "B. Through the skin", "C. Under the cranium", "D. Through the bone"], a: 1 },
     { q: "The peritoneum between the intestinal loops is:", o: ["A. Mesentery", "B. Mesoderm", "C. Periosteum", "D. Endoderm"], a: 0 },
     { q: "The hip is proximal to the foot.", o: ["A. Anterior", "B. Distal", "C. Proximal", "D. Lateral"], a: 2 },
-    { q: "The prefix sub means Below and supra means Above:", o: ["A. Below & Right", "B. Below & Above", "C. Above & Below", "D. Below & Left"], a: 1 },
+    { q: "The prefix sub means .... and supra means .....:", o: ["A. Below & Right", "B. Below & Above", "C. Above & Below", "D. Below & Left"], a: 1 },
     { q: "The prefix 'peri' means:", o: ["A. Through", "B. Around", "C. Inside", "D. Below"], a: 1 },
-    { q: "The sagittal plane divide the body into upper and lower parts:", o: ["A. True", "B. False"], a: 1 },
+    { q: "The ..... plane divide the body into upper and lower parts:", o: ["A. True", "B. False"], a: 1 },
     { q: "The direction of front middle means:", o: ["A. Anterolateral", "B. Anterosuperior", "C. Anteromedial", "D. Anteroinferior"], a: 2 },
     { q: "The prefix meta means:", o: ["A. Above", "B. White", "C. After", "D. Below"], a: 2 },
-    { q: "The knee is proximal to the foot.", o: ["A. Anterior", "B. Posterior", "C. Proximal", "D. Distal"], a: 2 },
+    { q: "The knee is ..... to the foot.", o: ["A. Anterior", "B. Posterior", "C. Proximal", "D. Distal"], a: 2 },
     { q: "The Prefix that mean below is:", o: ["A. Supra", "B. Epi", "C. infra", "D. Peri"], a: 2 },
-    { q: "The wrist is proximal to the fingers", o: ["A. Proximal", "B. Superior", "C. Distal", "D. Inferior"], a: 0 },
+    { q: "The wrist is ..... to the fingers", o: ["A. Proximal", "B. Superior", "C. Distal", "D. Inferior"], a: 0 },
     { q: "Front and top is:", o: ["A. Anterosuperior", "B. Anterolateral", "C. Posteromedial", "D. Posterolateral"], a: 0 },
     { q: "The prefixes 'Epi' and 'Sub' have the same meaning:", o: ["A. True", "B. False"], a: 1 },
     { q: "Extra uterine means upon the uterus:", o: ["A. True", "B. False"], a: 1 },
     { q: "Front and side means anterolateral:", o: ["A. True", "B. False"], a: 0 },
     { q: "Ankle is proximal to the hip:", o: ["A. True", "B. False"], a: 1 },
     { q: "Dextrocardia means that the heart isn’t in his normal place:", o: ["A. True", "B. False"], a: 0 },
-    { q: "Hand is distal to the shoulder", o: ["A. distal", "B. Proximal", "C. Superior", "D. Anterior"], a: 0 },
-    { q: "The eye brow is superior to the eye", o: ["A. Inferior", "B. superior", "C. External", "D. Medial"], a: 1 },
+    { q: "Hand is ..... to the shoulder", o: ["A. distal", "B. Proximal", "C. Superior", "D. Anterior"], a: 0 },
+    { q: "The eye brow is ..... to the eye", o: ["A. Inferior", "B. superior", "C. External", "D. Medial"], a: 1 },
     { q: "When the arm is brought to the midline this is called:", o: ["A. Adduction", "B. Abduction", "C. Rotation", "D. Inversion"], a: 0 },
-    { q: "Ribs are anterior while vertebrae are posterior", o: ["A. Posterior, Anterior", "B. Superior, Inferior", "C. Medial, Lateral", "D. Anterior, Posterior"], a: 3 },
+    { q: "Ribs are ..... while vertebrae are ......", o: ["A. Posterior, Anterior", "B. Superior, Inferior", "C. Medial, Lateral", "D. Anterior, Posterior"], a: 3 },
     { q: "The Prefix that mean (above) is:", o: ["A. Supra", "B. Infra", "C. Epi", "D. Both A & C"], a: 3 },
     { q: "Which of the following has a different meaning than the others:", o: ["A. Infra", "B. Sub", "C. Caudal", "D. Retro"], a: 3 },
-    { q: "A teenage girl had a motorbike accident and as a result, she was injured in her foot. The wound is distal In relation to knee.", o: ["A. proximal", "B. distal", "C. dorsal", "D. inferior"], a: 1 },
+    { q: "A teenage girl had a motorbike accident and as a result, she was injured in her foot. The wound is .... In relation to knee.", o: ["A. proximal", "B. distal", "C. dorsal", "D. inferior"], a: 1 },
     { q: "The term for surrounding the mouth is:", o: ["A. Circumoral", "B. Sublingual", "C. perlingual", "D. Circumocular"], a: 0 },
     { q: "Prefix that means without:", o: ["A. Contra", "B. Homo", "C. A", "D. Anti"], a: 2 },
     { q: "Leukocytes means:", o: ["A. Black cells", "B. white cells", "C. Red cells", "D. Green cells"], a: 1 },
@@ -955,6 +955,7 @@ const TERMINOLOGY_QUESTIONS = [
     { q: "Anesthesia means:", o: ["A. Sleeping induced by narcotics", "B. lack of sensation", "C. Oversensitivity to pain", "D. No pain"], a: 1 },
     { q: "Increased pain sensation (oversensitivity) is called:", o: ["A. Hypertension", "B. Hyperalgesia", "C. Hypoesthesia", "D. Analgesia"], a: 1 }
 ];
+
 
 
 
