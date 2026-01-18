@@ -743,7 +743,7 @@ const FOUNDATION_QUESTIONS = [
     { q: "The complex formed by a segment of DNA wrapped twice around 8 histone proteins is called:", o: ["a) Nucleosome", "b) Nucleoside", "c) Nucleotide", "d) Chromatosome"], a: 0 },
     { q: "Which of the following cell types primarily performs constitutive secretion?", o: ["a) Pancreatic acinar cells", "b) macrophages", "c) Plasma cells", "d) Mast cells"], a: 2 },
     { q: "When the body touches a hot object and reflexively withdraws the hand, which of the following is the primary motor center involved?", o: ["a) Anterior horn cells (AHC)", "b) lateral horn cells (LHC)", "c) Dorsal horn cell (DHC)", "d) Hypothalamus"], a: 0 },
-    { q: "Which of the following adrenergic receptors mediates bronchodilation and enhances airflow in the respiratory airways?", o: ["a) Alpha 1 receptors", "b) Alpha 2 receptors", "c) Beta 2 receptors", "d) Beta 1 receptors"], a: 2 },
+    { q: "Which of the following adrenergic receptors mediates bronchodilation and enhances airflow in the respiratory airways?", o: ["a) Alpha 1 receptors", "b) Alpha 2 receptors", "c) Beta 2 receptors", "d) Beta 1 receptors"], a: 2 }
 ];
 const TERMINOLOGY_QUESTIONS = [
     { q: " inflammation of small intestine:", o: ["a- ilitis", "b- ilietis", "c- Enteritis", "d- colitis"], a: 2 },
